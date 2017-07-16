@@ -7,9 +7,7 @@ public class DungeonRoom : System.Object
     public const int TILE_DEPTH = 5;
     public const int TILE_HEIGHT = 100;
 
-    public readonly int rootx, rooty, rootz;
     public readonly int width, height;
-    public bool isSpawn = false;
 
     public DungeonTile[,] floors;
     public DungeonTile[,] ceilings;
@@ -23,22 +21,14 @@ public class DungeonRoom : System.Object
     public List<Placement<DungeonComponent>> components = new List<Placement<DungeonComponent>>();
     public List<Placement<EntityEnemy>> enemies = new List<Placement<EntityEnemy>>();
 
-    public DungeonRoom(int x, int y, int z, int width, int height)
+    public DungeonRoom(int width, int height)
     {
-        rootx = x;
-        rooty = y;
-        rootz = z;
         this.width = width;
         this.height = height;
 
         floors = new DungeonTile[width, height];
         ceilings = new DungeonTile[width, height];
         walls = new DungeonTile[width, height];
-    }
-
-    public bool IsRoot(int x, int y, int z)
-    {
-        return x == rootx && y == rooty && z == rootz;
     }
 
     public GameObject Generate(float x, float y, float z)
@@ -95,7 +85,7 @@ public class DungeonRoom : System.Object
 
         Transform components = new GameObject("components").transform;
         components.SetParent(troom);
-        foreach(var component in this.components)
+        foreach (var component in this.components)
             Object.Instantiate(component.component.gameObject, new Vector3((component.x + x) * TILE_WIDTH, y * TILE_HEIGHT, (component.y + y) * TILE_DEPTH), Quaternion.identity, components);
 
         // TODO zoners and enemies
