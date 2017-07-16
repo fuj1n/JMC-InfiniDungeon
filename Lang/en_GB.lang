@@ -1,0 +1,6 @@
+lang.name = English (British)
+
+dungeon.generator.planning=Planning the Dungeon
+dungeon.generator.building=Building the Dungeon
+dungeon.generator.spawning=Spawning Enemies
+dungeon.generator.loot=Generating Loot
