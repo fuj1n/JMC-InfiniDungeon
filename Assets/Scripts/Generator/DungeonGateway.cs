@@ -1,7 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-public class DungeonGateway : MonoBehaviour {
+public class DungeonGateway : MonoBehaviour
+{
     [NonSerialized]
     public Transform player;
     [NonSerialized]

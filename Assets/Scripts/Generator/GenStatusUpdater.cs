@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class GenStatusUpdater : MonoBehaviour {
+public class GenStatusUpdater : MonoBehaviour
+{
     public string status = "Generating Dungeon";
 
     private Text text;

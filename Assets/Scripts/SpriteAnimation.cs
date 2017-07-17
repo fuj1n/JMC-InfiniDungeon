@@ -16,7 +16,8 @@ public class SpriteAnimation : MonoBehaviour
 
     private void Start()
     {
-        if (frames.Length <= 0) {
+        if (frames.Length <= 0)
+        {
             Destroy(this);
             return;
         }
@@ -45,7 +46,7 @@ public class SpriteAnimation : MonoBehaviour
 
     private void Update()
     {
-        if(timer > 0)
+        if (timer > 0)
         {
             timer -= Time.deltaTime;
             return;

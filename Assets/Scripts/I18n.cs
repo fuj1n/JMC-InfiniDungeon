@@ -17,12 +17,12 @@ public class I18n
         if (instance != null)
             return instance;
 
-        I18n i18n = new I18n();
+        instance = new I18n();
 
         if (useLanguageDiscovery)
-            i18n.FindLanguages();
+            instance.FindLanguages();
 
-        return i18n;
+        return instance;
     }
 
     public string Translate(string s)
