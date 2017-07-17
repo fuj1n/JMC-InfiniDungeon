@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Weighted_Randomizer;
@@ -8,12 +11,14 @@ public class DungeonGenerator : MonoBehaviour
     public GameObject player;
 
     [Header("Dungeon")]
+    [Tooltip("The dungeon layout prefab")]
     public Dungeon dungeon;
+    [Tooltip("The name of the dungeon")]
     public string dungeonName;
 
-    [Header("Floors")]
-    public int numOfFloors = 2;
-    public int floorRooms = 25;
+    [Header("Levels")]
+    public int numOfLevels = 2;
+    public int roomsPerLevel = 50;
 
     [Header("Size")]
     public int minRoomWidth = 3;
@@ -21,6 +26,21 @@ public class DungeonGenerator : MonoBehaviour
 
     public int maxRoomWidth = 6;
     public int maxRoomDepth = 6;
+
+    [Header("Positioning")]
+    public int maxBranches = 10;
+    public int minRoomGap = 1;
+    public int maxRoomGap = 4;
+
+    [Header("Connections")]
+    [Tooltip("The chance that the rooms will connect inter-branch (percentage)")]
+    public int interbranchConnectChance = 25;
+    [Tooltip("The chance that the rooms will connect intra-branch (percentage)")]
+    public int intrabranchConnectChance = 75;
+    [Tooltip("Whether an inter-branch connection will be guaranteed when a connection is missing")]
+    public bool guaranteeConnection = true;
+    [Tooltip("Whether the generator should prevent isolated rooms")]
+    public bool isolationPrevention = true;
 
     private GameObject genScreen;
     private GenStatusUpdater statusUpdater;
@@ -86,33 +106,34 @@ public class DungeonGenerator : MonoBehaviour
 
         SceneManager.SetActiveScene(scene);
 
-        GenerateScene();
+        StartCoroutine(GenerateScene());
     }
 
-    private void GenerateScene()
+    private IEnumerator GenerateScene()
     {
-        SetStatus("dungeon.generator.planning");
+        yield return SetStatus("planning");
 
-        List<DungeonRoom>[] rooms = new List<DungeonRoom>[numOfFloors];
+        List<DungeonRoom>[] levels = new List<DungeonRoom>[numOfLevels];
 
-        for (int i = 0; i < rooms.Length; i++)
-            rooms[i] = new List<DungeonRoom>();
+        for (int i = 0; i < levels.Length; i++)
+            levels[i] = new List<DungeonRoom>();
 
         System.Random random = new System.Random();
 
-        for (int floor = 0; floor < numOfFloors; floor++)
+        for (int floor = 0; floor < numOfLevels; floor++)
         {
-            print("Generating floor " + floor);
-            for (int rc = 0; rc < floorRooms; rc++)
+            //print("Generating floor " + floor);
+            for (int rc = 0; rc < roomsPerLevel; rc++)
             {
-                print("Generating room " + (rc + 1) + " of " + floorRooms + "(" + floor + ")");
+                yield return null;
+                //print("Generating room " + (rc + 1) + " of " + floorRooms + "(" + floor + ")");
 
                 int rw = random.Next(minRoomWidth, maxRoomWidth);
                 int rh = random.Next(minRoomDepth, maxRoomDepth);
 
                 DungeonRoom room = new DungeonRoom(rw, rh);
 
-                rooms[floor].Add(room);
+                levels[floor].Add(room);
 
                 for (int tx = 0; tx < rw; tx++)
                     for (int ty = 0; ty < rh; ty++)
@@ -128,41 +149,87 @@ public class DungeonGenerator : MonoBehaviour
                 {
                     comp.Place(room);
                 }
-
-                // TODO generate enemies
             }
         }
 
-        /*for (int floor = 0; floor < numOfFloors - 1; floor++)
+        yield return SetStatus("shuffling");
+
+        for (int i = 0; i < levels.Length; i++)
+            levels[i] = levels[i].OrderBy(a => Guid.NewGuid()).ToList();
+
+        yield return SetStatus("positioning");
+
+        for (int level = 0; level < levels.Length; level++)
         {
-            int fn = floor * 2;
+            List<DungeonRoom> rooms = levels[level];
 
-            DungeonRoom selectedRoom;
+            int cr = 0;
+            int curY = 0;
 
-            List<DungeonRoom> possibilities = rooms[floor];
+            while (cr < rooms.Count)
+            {
+                yield return null;
 
-            if (possibilities.Count < 1)
-                throw new IndexOutOfRangeException("No valid rooms generated for floor " + floor + "?");
+                int curX = 0;
+                int tallestRoom = 0;
 
-            selectedRoom = possibilities[random.Next(0, possibilities.Count)];
+                rooms[cr].position = new IntCoords3(curX, level, curY);
+                curX += rooms[cr].width;
 
-            DungeonRoom targetRoom = spawnRooms[fn + 1];
+                if (rooms[cr].height > tallestRoom)
+                    tallestRoom = rooms[cr].height;
 
-            DungeonZoner zoner = zoners.NextWithReplacement();
-            zoner.Place(selectedRoom, targetRoom, random);
-        }*/
+                cr++;
 
-        SetStatus("dungeon.generator.building");
+                int leftRooms = random.Next(0, maxBranches);
+                int rightRooms = random.Next(0, maxBranches);
+
+                for (int x = 0; x < leftRooms && cr < rooms.Count; x++)
+                {
+                    curX -= random.Next(minRoomGap, maxRoomGap) + rooms[cr].width;
+
+                    rooms[cr].position = new IntCoords3(curX, level, curY);
+
+                    if (rooms[cr].height > tallestRoom)
+                        tallestRoom = rooms[cr].height;
+
+                    cr++;
+                }
+
+                curX = 0;
+
+                for (int x = 0; x < rightRooms && cr < rooms.Count; x++)
+                {
+                    curX += random.Next(minRoomGap, maxRoomGap);
+
+                    rooms[cr].position = new IntCoords3(curX, level, curY);
+                    curX += rooms[cr].width;
+
+                    if (rooms[cr].height > tallestRoom)
+                        tallestRoom = rooms[cr].height;
+
+                    cr++;
+                }
+
+                curY += random.Next(minRoomGap, maxRoomGap) + tallestRoom;
+            }
+        }
+
+        yield return SetStatus("building");
 
         GameObject dng = new GameObject("Dungeon");
 
-        for (int floor = 0; floor < numOfFloors; floor++)
-            foreach (DungeonRoom room in rooms[floor])
+        for (int level = 0; level < numOfLevels; level++)
+            foreach (DungeonRoom room in levels[level])
             {
-                //room.Generate(room.Key.x, room.Key.y, room.Key.z).transform.SetParent(dng.transform);
+                yield return null;
+                room.Generate(room.position.Value.x, room.position.Value.y, room.position.Value.z).transform.SetParent(dng.transform);
             }
 
-        Destroy(dungeon);
+        yield return new WaitForSeconds(5F);
+
+        Destroy(dungeon.gameObject);
+        Destroy(gameObject);
     }
 
     private void VerifyPath(DungeonRoom[,,] dungeon)
@@ -170,11 +237,13 @@ public class DungeonGenerator : MonoBehaviour
 
     }
 
-    private void SetStatus(string s)
+    private object SetStatus(string s)
     {
-        s = i18n.Translate(s);
+        s = i18n.Translate("dungeon.generator." + s);
 
         if (statusUpdater)
             statusUpdater.status = s;
+
+        return null;
     }
 }

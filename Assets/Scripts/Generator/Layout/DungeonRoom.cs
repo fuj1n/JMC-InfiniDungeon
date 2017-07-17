@@ -21,6 +21,9 @@ public class DungeonRoom : System.Object
     public List<Placement<DungeonComponent>> components = new List<Placement<DungeonComponent>>();
     public List<Placement<EntityEnemy>> enemies = new List<Placement<EntityEnemy>>();
 
+    public IntCoords3? position = null;
+    public List<DungeonRoom> connections = new List<DungeonRoom>();
+
     public DungeonRoom(int width, int height)
     {
         this.width = width;
@@ -39,6 +42,7 @@ public class DungeonRoom : System.Object
 
         Transform floors = new GameObject("floors").transform;
         floors.SetParent(troom);
+        floors.localPosition = Vector3.zero;
         for (int tx = 0; tx < this.floors.GetLength(0); tx++)
             for (int ty = 0; ty < this.floors.GetLength(1); ty++)
                 if (this.floors[tx, ty] != null)
@@ -48,6 +52,7 @@ public class DungeonRoom : System.Object
                 }
         Transform ceilings = new GameObject("ceilings").transform;
         ceilings.SetParent(troom);
+        ceilings.localPosition = Vector3.zero;
         for (int tx = 0; tx < this.ceilings.GetLength(0); tx++)
             for (int ty = 0; ty < this.ceilings.GetLength(1); ty++)
                 if (this.ceilings[tx, ty] != null)
@@ -58,6 +63,7 @@ public class DungeonRoom : System.Object
 
         Transform walls = new GameObject("walls").transform;
         walls.SetParent(troom);
+        walls.localPosition = Vector3.zero;
         for (int tx = 0; tx < this.walls.GetLength(0); tx++)
             for (int ty = 0; ty < this.walls.GetLength(1); ty++)
                 if (this.walls[tx, ty] != null)
@@ -65,28 +71,37 @@ public class DungeonRoom : System.Object
                     GameObject go = Object.Instantiate(this.walls[tx, ty].gameObject, walls);
                     go.transform.Translate(tx * TILE_WIDTH, y * TILE_HEIGHT, ty * TILE_DEPTH);
 
-                    if ((tx == 0 || tx == 1) && (ty == 0 || ty == 1))
+                    if ((tx == 0 || tx == this.walls.GetLength(0) - 1) && (ty == 0 || ty == this.walls.GetLength(1) - 1))
                     {
                         GameObject go1 = Object.Instantiate(this.walls[tx, ty].gameObject, walls);
                         go1.transform.Translate(tx * TILE_WIDTH, y * TILE_HEIGHT, ty * TILE_DEPTH);
-                        go.transform.Rotate(new Vector3(0, ty == 0 ? 90 : -90, 0));
+                        go.transform.Rotate(new Vector3(0, ty == 0 ? -90 : 90, 0));
                         go1.transform.Rotate(new Vector3(0, tx == 0 ? 0 : 180, 0));
                     }
                     else
                     {
                         if (ty == 0)
-                            go.transform.Rotate(new Vector3(0, 90, 0));
-                        else if (ty == 1)
                             go.transform.Rotate(new Vector3(0, -90, 0));
-                        else if (tx == 1)
+                        else if (ty == this.walls.GetLength(1) - 1)
+                            go.transform.Rotate(new Vector3(0, 90, 0));
+                        else if (tx == this.walls.GetLength(0) - 1)
                             go.transform.Rotate(new Vector3(0, 180, 0));
                     }
                 }
 
         Transform components = new GameObject("components").transform;
         components.SetParent(troom);
+        components.localPosition = Vector3.zero;
         foreach (var component in this.components)
             Object.Instantiate(component.component.gameObject, new Vector3((component.x + x) * TILE_WIDTH, y * TILE_HEIGHT, (component.y + y) * TILE_DEPTH), Quaternion.identity, components);
+
+        GameObject lgo = new GameObject("Light");
+        lgo.transform.SetParent(troom);
+
+        lgo.transform.localPosition = new Vector3(width / 2 * TILE_WIDTH, y * TILE_HEIGHT + 1F, height / 2 * TILE_DEPTH);
+
+        Light l = lgo.AddComponent<Light>();
+        l.type = LightType.Point;
 
         // TODO zoners and enemies
 
