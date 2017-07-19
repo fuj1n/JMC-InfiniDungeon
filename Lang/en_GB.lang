@@ -4,6 +4,7 @@ $English (British)
 dungeon.generator.planning=Planning the Dungeon
 dungeon.generator.shuffling=Shuffling the rooms a bit
 dungeon.generator.positioning=Positioning the rooms
+dungeon.generator.connecting=Connecting the rooms
 dungeon.generator.building=Building the Dungeon
 dungeon.generator.spawning=Spawning Enemies
 dungeon.generator.loot=Generating Loot

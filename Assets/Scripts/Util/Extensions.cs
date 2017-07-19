@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 public static class Extensions
 {
@@ -9,5 +10,12 @@ public static class Extensions
         cpy.Remove(rem);
 
         return cpy;
+    }
+
+    public static bool NextBool(this Random random, int probability)
+    {
+        int chance = random.Next(1, 101);
+
+        return chance <= probability;
     }
 }

@@ -15,6 +15,8 @@ public class DungeonGenerator : MonoBehaviour
     public Dungeon dungeon;
     [Tooltip("The name of the dungeon")]
     public string dungeonName;
+    [Tooltip("The seed of the dungeon generator (random at zero)")]
+    public int dungeonSeed;
 
     [Header("Levels")]
     public int numOfLevels = 2;
@@ -35,28 +37,24 @@ public class DungeonGenerator : MonoBehaviour
     [Header("Connections")]
     [Tooltip("The chance that the rooms will connect inter-branch (percentage)")]
     public int interbranchConnectChance = 25;
-    [Tooltip("The chance that the rooms will connect intra-branch (percentage)")]
-    public int intrabranchConnectChance = 75;
-    [Tooltip("Whether an inter-branch connection will be guaranteed when a connection is missing")]
-    public bool guaranteeConnection = true;
-    [Tooltip("Whether the generator should prevent isolated rooms")]
-    public bool isolationPrevention = true;
 
     private GameObject genScreen;
     private GenStatusUpdater statusUpdater;
+
+    private List<DungeonRoom>[] levels;
 
     private string sceneName;
     private Scene scene;
 
     private I18n i18n = I18n.Create();
 
-    private IWeightedRandomizer<DungeonTile> floors = new DynamicWeightedRandomizer<DungeonTile>();
-    private IWeightedRandomizer<DungeonTile> ceilings = new DynamicWeightedRandomizer<DungeonTile>();
-    private IWeightedRandomizer<DungeonTile> walls = new DynamicWeightedRandomizer<DungeonTile>();
-    private IWeightedRandomizer<DungeonTile> doorways = new DynamicWeightedRandomizer<DungeonTile>();
-    private IWeightedRandomizer<DungeonZoner> zoners = new DynamicWeightedRandomizer<DungeonZoner>();
-
-    private IWeightedRandomizer<EntityEnemy> enemies = new DynamicWeightedRandomizer<EntityEnemy>();
+    private System.Random random;
+    private IWeightedRandomizer<DungeonTile> floors;
+    private IWeightedRandomizer<DungeonTile> ceilings;
+    private IWeightedRandomizer<DungeonTile> walls;
+    private IWeightedRandomizer<DungeonTile> doorways;
+    private IWeightedRandomizer<DungeonZoner> zoners;
+    private IWeightedRandomizer<EntityEnemy> enemies;
 
     private void Awake()
     {
@@ -67,8 +65,19 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void ConfigureRandom()
     {
+        if (dungeonSeed == 0)
+            dungeonSeed = new System.Random().Next(int.MinValue, int.MaxValue);
+        random = new System.Random(dungeonSeed);
+
+        floors = new DynamicWeightedRandomizer<DungeonTile>(dungeonSeed);
+        ceilings = new DynamicWeightedRandomizer<DungeonTile>(dungeonSeed);
+        walls = new DynamicWeightedRandomizer<DungeonTile>(dungeonSeed);
+        doorways = new DynamicWeightedRandomizer<DungeonTile>(dungeonSeed);
+        zoners = new DynamicWeightedRandomizer<DungeonZoner>(dungeonSeed);
+        enemies = new DynamicWeightedRandomizer<EntityEnemy>(dungeonSeed);
+
         foreach (DungeonTile floor in dungeon.floors)
             floors[floor] = floor.weight;
         foreach (DungeonTile ceiling in dungeon.ceilings)
@@ -81,7 +90,10 @@ public class DungeonGenerator : MonoBehaviour
             zoners[zoner] = zoner.weight;
         foreach (EntityEnemy enemy in dungeon.enemies)
             enemies[enemy] = enemy.weight;
+    }
 
+    private void Start()
+    {
         sceneName = "Generated/" + dungeonName;
 
         transform.SetParent(null, true);
@@ -111,14 +123,14 @@ public class DungeonGenerator : MonoBehaviour
 
     private IEnumerator GenerateScene()
     {
+        ConfigureRandom();
+
         yield return SetStatus("planning");
 
-        List<DungeonRoom>[] levels = new List<DungeonRoom>[numOfLevels];
+        levels = new List<DungeonRoom>[numOfLevels];
 
         for (int i = 0; i < levels.Length; i++)
             levels[i] = new List<DungeonRoom>();
-
-        System.Random random = new System.Random();
 
         for (int floor = 0; floor < numOfLevels; floor++)
         {
@@ -174,7 +186,7 @@ public class DungeonGenerator : MonoBehaviour
                 int tallestRoom = 0;
 
                 rooms[cr].position = new IntCoords3(curX, level, curY);
-                curX += rooms[cr].width;
+                DungeonRoom lastRoom = rooms[cr];
 
                 if (rooms[cr].height > tallestRoom)
                     tallestRoom = rooms[cr].height;
@@ -190,13 +202,17 @@ public class DungeonGenerator : MonoBehaviour
 
                     rooms[cr].position = new IntCoords3(curX, level, curY);
 
+                    if (cr > 0)
+                        lastRoom.connections.Add(lastRoom);
+
                     if (rooms[cr].height > tallestRoom)
                         tallestRoom = rooms[cr].height;
 
+                    lastRoom = rooms[cr];
                     cr++;
                 }
 
-                curX = 0;
+                curX = lastRoom.width;
 
                 for (int x = 0; x < rightRooms && cr < rooms.Count; x++)
                 {
@@ -205,31 +221,56 @@ public class DungeonGenerator : MonoBehaviour
                     rooms[cr].position = new IntCoords3(curX, level, curY);
                     curX += rooms[cr].width;
 
+                    if (cr > 0)
+                        lastRoom.connections.Add(lastRoom);
+
                     if (rooms[cr].height > tallestRoom)
                         tallestRoom = rooms[cr].height;
 
+                    lastRoom = rooms[cr];
                     cr++;
                 }
+
+                //TODO: Interbranch connectors
 
                 curY += random.Next(minRoomGap, maxRoomGap) + tallestRoom;
             }
         }
 
-        yield return SetStatus("building");
+        yield return SetStatus("connecting");
+
+        for (int level = 0; level < levels.Length; level++)
+        {
+            foreach (DungeonRoom room in from d in levels[level]
+                                         where d.connections.Count > 1
+                                         select d)
+            {
+                foreach (DungeonRoom target in room.connections)
+                {
+                    CardinalDirection direction;
+                }
+            }
+        }
+
+        BuildDungeon();
+
+        yield return new WaitForSeconds(5F);
+
+        Destroy(dungeon.gameObject);
+        Destroy(gameObject);
+    }
+
+    private void BuildDungeon()
+    {
+        SetStatus("building");
 
         GameObject dng = new GameObject("Dungeon");
 
         for (int level = 0; level < numOfLevels; level++)
             foreach (DungeonRoom room in levels[level])
             {
-                yield return null;
                 room.Generate(room.position.Value.x, room.position.Value.y, room.position.Value.z).transform.SetParent(dng.transform);
             }
-
-        yield return new WaitForSeconds(5F);
-
-        Destroy(dungeon.gameObject);
-        Destroy(gameObject);
     }
 
     private void VerifyPath(DungeonRoom[,,] dungeon)

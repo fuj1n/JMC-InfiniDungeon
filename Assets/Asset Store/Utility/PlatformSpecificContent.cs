@@ -17,10 +17,14 @@ namespace UnityStandardAssets.Utility
             Mobile
         }
 
-        [SerializeField] private BuildTargetGroup m_BuildTargetGroup;
-        [SerializeField] private GameObject[] m_Content = new GameObject[0];
-        [SerializeField] private MonoBehaviour[] m_MonoBehaviours = new MonoBehaviour[0];
-        [SerializeField] private bool m_ChildrenOfThisObject;
+        [SerializeField]
+        private BuildTargetGroup m_BuildTargetGroup;
+        [SerializeField]
+        private GameObject[] m_Content = new GameObject[0];
+        [SerializeField]
+        private MonoBehaviour[] m_MonoBehaviours = new MonoBehaviour[0];
+        [SerializeField]
+        private bool m_ChildrenOfThisObject;
 
 #if !UNITY_EDITOR
 	void OnEnable()
@@ -53,7 +57,7 @@ namespace UnityStandardAssets.Utility
 
         private void CheckEnableContent()
         {
-#if (UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8 || UNITY_TIZEN || UNITY_STV )
+#if (UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8 || UNITY_TIZEN || UNITY_STV)
 		if (m_BuildTargetGroup == BuildTargetGroup.Mobile)
 		{
 			EnableContent(true);
@@ -62,7 +66,7 @@ namespace UnityStandardAssets.Utility
 		}
 #endif
 
-#if !(UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8 || UNITY_TIZEN || UNITY_STV )
+#if !(UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8 || UNITY_TIZEN || UNITY_STV)
             if (m_BuildTargetGroup == BuildTargetGroup.Mobile)
             {
                 EnableContent(false);
