@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Weighted_Randomizer;
@@ -56,6 +57,8 @@ public class DungeonGenerator : MonoBehaviour
     private IWeightedRandomizer<DungeonZoner> zoners;
     private IWeightedRandomizer<EntityEnemy> enemies;
     private IWeightedRandomizer<DungeonTile> connectors;
+
+    private bool generationComplete = false;
 
     private void Awake()
     {
@@ -122,14 +125,26 @@ public class DungeonGenerator : MonoBehaviour
 
         SceneManager.SetActiveScene(scene);
 
-        StartCoroutine(GenerateScene());
+        Thread thr = new Thread(new ThreadStart(GenerateScene));
+        thr.Name = "Dungeon Generation Thread";
+        generationComplete = false;
+        thr.Start();
     }
 
-    private IEnumerator GenerateScene()
+    private void Update()
+    {
+        if (generationComplete)
+        {
+            generationComplete = false;
+            StartCoroutine(BuildDungeon());
+        }
+    }
+
+    private void GenerateScene()
     {
         ConfigureRandom();
 
-        yield return SetStatus("planning");
+        SetStatus("planning");
 
         levels = new List<DungeonRoom>[numOfLevels];
 
@@ -141,7 +156,6 @@ public class DungeonGenerator : MonoBehaviour
             //print("Generating floor " + floor);
             for (int rc = 0; rc < roomsPerLevel; rc++)
             {
-                yield return null;
                 //print("Generating room " + (rc + 1) + " of " + floorRooms + "(" + floor + ")");
 
                 int rw = random.Next(minRoomWidth, maxRoomWidth);
@@ -168,12 +182,12 @@ public class DungeonGenerator : MonoBehaviour
             }
         }
 
-        yield return SetStatus("shuffling");
+        SetStatus("shuffling");
 
         for (int i = 0; i < levels.Length; i++)
             levels[i] = levels[i].OrderBy(a => Guid.NewGuid()).ToList();
 
-        yield return SetStatus("positioning");
+        SetStatus("positioning");
 
         for (int level = 0; level < levels.Length; level++)
         {
@@ -185,8 +199,6 @@ public class DungeonGenerator : MonoBehaviour
 
             while (cr < rooms.Count)
             {
-                yield return null;
-
                 int curX = 0;
                 int tallestRoom = 0;
 
@@ -254,7 +266,7 @@ public class DungeonGenerator : MonoBehaviour
             }
         }
 
-        yield return SetStatus("connecting");
+        SetStatus("connecting");
 
         for (int level = 0; level < levels.Length; level++)
         {
@@ -273,26 +285,26 @@ public class DungeonGenerator : MonoBehaviour
                     int ydif = Mathf.Abs(roomPosition.z - targetPosition.z);
 
                     if (xdif > ydif)
-                        if (roomPosition.x > targetPosition.z)
+                        if (roomPosition.x > targetPosition.x)
                             direction = CardinalDirection.WEST;
                         else
                             direction = CardinalDirection.EAST;
                     else if (xdif < ydif)
-                        if (roomPosition.y > targetPosition.z)
-                            direction = CardinalDirection.SOUTH;
-                        else
+                        if (roomPosition.z > targetPosition.z)
                             direction = CardinalDirection.NORTH;
+                        else
+                            direction = CardinalDirection.SOUTH;
                     else
                         throw new Exception("The room we're trying to connect to is diagonal to us?");
 
                     switch (direction)
                     {
-                        //TODO other side wall replacement
                         case CardinalDirection.NORTH:
                             {
                                 room.walls[room.width / 2, 0] = doorways.NextWithReplacement();
-                                //TODO fix math
-                                DungeonRoom connectorRoom = new ConnectorRoom(1, Math.Abs(roomPosition.z - (targetPosition.z + target.height)));
+                                IntCoords2 targetHole = target.ToRoomPosition(roomPosition.x + room.width / 2, targetPosition.z + target.height - 1);
+                                target.walls[targetHole.x, targetHole.y] = doorways.NextWithReplacement();
+                                DungeonRoom connectorRoom = new ConnectorRoom(1, roomPosition.z - (targetPosition.z + target.height), false);
                                 connectorRoom.position = new IntCoords3(roomPosition.x + room.width / 2, level, targetPosition.z + target.height);
                                 connectorRooms.Add(connectorRoom);
                                 break;
@@ -300,19 +312,31 @@ public class DungeonGenerator : MonoBehaviour
                         case CardinalDirection.SOUTH:
                             {
                                 room.walls[room.width / 2, room.height - 1] = doorways.NextWithReplacement();
-                                //TODO math
+                                IntCoords2 targetHole = target.ToRoomPosition(targetPosition.x + target.width / 2, targetPosition.z);
+                                target.walls[targetHole.x, targetHole.y] = doorways.NextWithReplacement();
+                                DungeonRoom connectorRoom = new ConnectorRoom(1, targetPosition.z - (roomPosition.z + room.height), false);
+                                connectorRoom.position = new IntCoords3(roomPosition.x + room.width / 2, level, roomPosition.z + room.height);
+                                connectorRooms.Add(connectorRoom);
                                 break;
                             }
                         case CardinalDirection.EAST:
                             {
                                 room.walls[room.width - 1, room.height / 2] = doorways.NextWithReplacement();
-                                //TODO math
+                                IntCoords2 targetHole = target.ToRoomPosition(targetPosition.x, targetPosition.z + target.height / 2);
+                                target.walls[targetHole.x, targetHole.y] = doorways.NextWithReplacement();
+                                DungeonRoom connectorRoom = new ConnectorRoom(targetPosition.x - (roomPosition.x + room.width), 1, true);
+                                connectorRoom.position = new IntCoords3(roomPosition.x + room.width, level, roomPosition.z + room.height / 2);
+                                connectorRooms.Add(connectorRoom);
                                 break;
                             }
                         case CardinalDirection.WEST:
                             {
                                 room.walls[0, room.height / 2] = doorways.NextWithReplacement();
-                                //TODO math
+                                IntCoords2 targetHole = target.ToRoomPosition(targetPosition.x + target.width - 1, roomPosition.z + room.height / 2);
+                                target.walls[targetHole.x, targetHole.y] = doorways.NextWithReplacement();
+                                DungeonRoom connectorRoom = new ConnectorRoom(roomPosition.x - (targetPosition.x + target.width), 1, true);
+                                connectorRoom.position = new IntCoords3(targetPosition.x + target.width, level, targetPosition.z + target.height / 2);
+                                connectorRooms.Add(connectorRoom);
                                 break;
                             }
                     }
@@ -321,23 +345,21 @@ public class DungeonGenerator : MonoBehaviour
 
             foreach (DungeonRoom room in connectorRooms)
             {
+                DungeonTile tile = connectors.NextWithReplacement();
                 for (int x = 0; x < room.width; x++)
                     for (int y = 0; y < room.height; y++)
-                        room.floors[x, y] = connectors.NextWithReplacement();
+                    {
+                        room.floors[x, y] = tile;
+                    }
             }
 
             levels[level].AddRange(connectorRooms);
         }
 
-        BuildDungeon();
-
-        yield return new WaitForSeconds(5F);
-
-        Destroy(dungeon.gameObject);
-        Destroy(gameObject);
+        generationComplete = true;
     }
 
-    private void BuildDungeon()
+    private IEnumerator BuildDungeon()
     {
         SetStatus("building");
 
@@ -346,6 +368,11 @@ public class DungeonGenerator : MonoBehaviour
         for (int level = 0; level < numOfLevels; level++)
             foreach (DungeonRoom room in levels[level])
                 room.Generate(room.position.Value.x, room.position.Value.y, room.position.Value.z).transform.SetParent(dng.transform);
+
+        yield return new WaitForSeconds(4F); // Wait a bit (because we're too fast to see my loading animation :/)
+
+        Destroy(dungeon.gameObject);
+        Destroy(gameObject);
     }
 
     private void VerifyPath(DungeonRoom[,,] dungeon)
@@ -353,14 +380,12 @@ public class DungeonGenerator : MonoBehaviour
 
     }
 
-    private object SetStatus(string s)
+    private void SetStatus(string s)
     {
         s = i18n.Translate("dungeon.generator." + s);
 
         if (statusUpdater)
             statusUpdater.status = s;
-
-        return null;
     }
 
     private struct Branch

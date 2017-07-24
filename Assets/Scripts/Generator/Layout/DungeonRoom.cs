@@ -44,45 +44,45 @@ public class DungeonRoom : System.Object
         floors.SetParent(troom);
         floors.localPosition = Vector3.zero;
         for (int tx = 0; tx < this.floors.GetLength(0); tx++)
-            for (int ty = 0; ty < this.floors.GetLength(1); ty++)
-                if (this.floors[tx, ty] != null)
+            for (int tz = 0; tz < this.floors.GetLength(1); tz++)
+                if (this.floors[tx, tz] != null)
                 {
-                    GameObject ob = Object.Instantiate(this.floors[tx, ty].gameObject, floors);
-                    ob.transform.Translate(tx * TILE_WIDTH, y * TILE_HEIGHT, ty * TILE_DEPTH);
+                    GameObject ob = Object.Instantiate(this.floors[tx, tz].gameObject, floors);
+                    ob.transform.Translate(tx * TILE_WIDTH, y * TILE_HEIGHT, tz * TILE_DEPTH);
                 }
         Transform ceilings = new GameObject("ceilings").transform;
         ceilings.SetParent(troom);
         ceilings.localPosition = Vector3.zero;
         for (int tx = 0; tx < this.ceilings.GetLength(0); tx++)
-            for (int ty = 0; ty < this.ceilings.GetLength(1); ty++)
-                if (this.ceilings[tx, ty] != null)
+            for (int tz = 0; tz < this.ceilings.GetLength(1); tz++)
+                if (this.ceilings[tx, tz] != null)
                 {
-                    GameObject ob = Object.Instantiate(this.ceilings[tx, ty].gameObject, ceilings);
-                    ob.transform.Translate(tx * TILE_WIDTH, y * TILE_HEIGHT, ty * TILE_DEPTH);
+                    GameObject ob = Object.Instantiate(this.ceilings[tx, tz].gameObject, ceilings);
+                    ob.transform.Translate(tx * TILE_WIDTH, y * TILE_HEIGHT, tz * TILE_DEPTH);
                 }
 
         Transform walls = new GameObject("walls").transform;
         walls.SetParent(troom);
         walls.localPosition = Vector3.zero;
         for (int tx = 0; tx < this.walls.GetLength(0); tx++)
-            for (int ty = 0; ty < this.walls.GetLength(1); ty++)
-                if (this.walls[tx, ty] != null)
+            for (int tz = 0; tz < this.walls.GetLength(1); tz++)
+                if (this.walls[tx, tz] != null)
                 {
-                    GameObject go = Object.Instantiate(this.walls[tx, ty].gameObject, walls);
-                    go.transform.Translate(tx * TILE_WIDTH, y * TILE_HEIGHT, ty * TILE_DEPTH);
+                    GameObject go = Object.Instantiate(this.walls[tx, tz].gameObject, walls);
+                    go.transform.Translate(tx * TILE_WIDTH, y * TILE_HEIGHT, tz * TILE_DEPTH);
 
-                    if ((tx == 0 || tx == this.walls.GetLength(0) - 1) && (ty == 0 || ty == this.walls.GetLength(1) - 1))
+                    if ((tx == 0 || tx == this.walls.GetLength(0) - 1) && (tz == 0 || tz == this.walls.GetLength(1) - 1))
                     {
-                        GameObject go1 = Object.Instantiate(this.walls[tx, ty].gameObject, walls);
-                        go1.transform.Translate(tx * TILE_WIDTH, y * TILE_HEIGHT, ty * TILE_DEPTH);
-                        go.transform.Rotate(new Vector3(0, ty == 0 ? -90 : 90, 0));
+                        GameObject go1 = Object.Instantiate(this.walls[tx, tz].gameObject, walls);
+                        go1.transform.Translate(tx * TILE_WIDTH, y * TILE_HEIGHT, tz * TILE_DEPTH);
+                        go.transform.Rotate(new Vector3(0, tz == 0 ? -90 : 90, 0));
                         go1.transform.Rotate(new Vector3(0, tx == 0 ? 0 : 180, 0));
                     }
                     else
                     {
-                        if (ty == 0)
+                        if (tz == 0)
                             go.transform.Rotate(new Vector3(0, -90, 0));
-                        else if (ty == this.walls.GetLength(1) - 1)
+                        else if (tz == this.walls.GetLength(1) - 1)
                             go.transform.Rotate(new Vector3(0, 90, 0));
                         else if (tx == this.walls.GetLength(0) - 1)
                             go.transform.Rotate(new Vector3(0, 180, 0));
@@ -106,6 +106,11 @@ public class DungeonRoom : System.Object
         // TODO zoners and enemies
 
         return room;
+    }
+
+    public IntCoords2 ToRoomPosition(int x, int z)
+    {
+        return new IntCoords2(x - position.Value.x, z - position.Value.z);
     }
 
     public struct Placement<T>
