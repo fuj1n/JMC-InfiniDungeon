@@ -46,7 +46,7 @@ public class DungeonGenerator : MonoBehaviour
     private string sceneName;
     private Scene scene;
 
-    private I18n i18n = I18n.Create();
+    private I18n i18n = I18n.Get();
 
     private System.Random random;
     private IWeightedRandomizer<DungeonTile> floors;
@@ -55,6 +55,7 @@ public class DungeonGenerator : MonoBehaviour
     private IWeightedRandomizer<DungeonTile> doorways;
     private IWeightedRandomizer<DungeonZoner> zoners;
     private IWeightedRandomizer<EntityEnemy> enemies;
+    private IWeightedRandomizer<DungeonTile> connectors;
 
     private void Awake()
     {
@@ -77,6 +78,7 @@ public class DungeonGenerator : MonoBehaviour
         doorways = new DynamicWeightedRandomizer<DungeonTile>(dungeonSeed);
         zoners = new DynamicWeightedRandomizer<DungeonZoner>(dungeonSeed);
         enemies = new DynamicWeightedRandomizer<EntityEnemy>(dungeonSeed);
+        connectors = new DynamicWeightedRandomizer<DungeonTile>(dungeonSeed);
 
         foreach (DungeonTile floor in dungeon.floors)
             floors[floor] = floor.weight;
@@ -90,6 +92,8 @@ public class DungeonGenerator : MonoBehaviour
             zoners[zoner] = zoner.weight;
         foreach (EntityEnemy enemy in dungeon.enemies)
             enemies[enemy] = enemy.weight;
+        foreach (DungeonTile connector in dungeon.connectors)
+            connectors[connector] = connector.weight;
     }
 
     private void Start()
@@ -173,6 +177,7 @@ public class DungeonGenerator : MonoBehaviour
 
         for (int level = 0; level < levels.Length; level++)
         {
+            List<Branch> branches = new List<Branch>();
             List<DungeonRoom> rooms = levels[level];
 
             int cr = 0;
@@ -186,7 +191,11 @@ public class DungeonGenerator : MonoBehaviour
                 int tallestRoom = 0;
 
                 rooms[cr].position = new IntCoords3(curX, level, curY);
+                DungeonRoom branchParent = rooms[cr];
                 DungeonRoom lastRoom = rooms[cr];
+
+                Branch branch = new Branch(branchParent);
+                branches.Add(branch);
 
                 if (rooms[cr].height > tallestRoom)
                     tallestRoom = rooms[cr].height;
@@ -202,17 +211,20 @@ public class DungeonGenerator : MonoBehaviour
 
                     rooms[cr].position = new IntCoords3(curX, level, curY);
 
-                    if (cr > 0)
-                        lastRoom.connections.Add(lastRoom);
+                    if (lastRoom != null)
+                        rooms[cr].connections.Add(lastRoom);
 
                     if (rooms[cr].height > tallestRoom)
                         tallestRoom = rooms[cr].height;
+
+                    branch.leftRooms.Add(rooms[cr]);
 
                     lastRoom = rooms[cr];
                     cr++;
                 }
 
-                curX = lastRoom.width;
+                curX = branchParent.width;
+                lastRoom = branchParent;
 
                 for (int x = 0; x < rightRooms && cr < rooms.Count; x++)
                 {
@@ -221,19 +233,24 @@ public class DungeonGenerator : MonoBehaviour
                     rooms[cr].position = new IntCoords3(curX, level, curY);
                     curX += rooms[cr].width;
 
-                    if (cr > 0)
-                        lastRoom.connections.Add(lastRoom);
+                    if (lastRoom != null)
+                        rooms[cr].connections.Add(lastRoom);
 
                     if (rooms[cr].height > tallestRoom)
                         tallestRoom = rooms[cr].height;
+
+                    branch.rightRooms.Add(rooms[cr]);
 
                     lastRoom = rooms[cr];
                     cr++;
                 }
 
-                //TODO: Interbranch connectors
-
                 curY += random.Next(minRoomGap, maxRoomGap) + tallestRoom;
+            }
+
+            for (int br = 1; br < branches.Count; br++)
+            {
+                branches[br].centerRoom.connections.Add(branches[br - 1].centerRoom);
             }
         }
 
@@ -241,15 +258,75 @@ public class DungeonGenerator : MonoBehaviour
 
         for (int level = 0; level < levels.Length; level++)
         {
+            List<DungeonRoom> connectorRooms = new List<DungeonRoom>();
             foreach (DungeonRoom room in from d in levels[level]
-                                         where d.connections.Count > 1
+                                         where d.connections.Count >= 1
                                          select d)
             {
                 foreach (DungeonRoom target in room.connections)
                 {
+                    IntCoords3 roomPosition = room.position.Value;
+                    IntCoords3 targetPosition = target.position.Value;
+
                     CardinalDirection direction;
+                    int xdif = Mathf.Abs(roomPosition.x - targetPosition.x);
+                    int ydif = Mathf.Abs(roomPosition.z - targetPosition.z);
+
+                    if (xdif > ydif)
+                        if (roomPosition.x > targetPosition.z)
+                            direction = CardinalDirection.WEST;
+                        else
+                            direction = CardinalDirection.EAST;
+                    else if (xdif < ydif)
+                        if (roomPosition.y > targetPosition.z)
+                            direction = CardinalDirection.SOUTH;
+                        else
+                            direction = CardinalDirection.NORTH;
+                    else
+                        throw new Exception("The room we're trying to connect to is diagonal to us?");
+
+                    switch (direction)
+                    {
+                        //TODO other side wall replacement
+                        case CardinalDirection.NORTH:
+                            {
+                                room.walls[room.width / 2, 0] = doorways.NextWithReplacement();
+                                //TODO fix math
+                                DungeonRoom connectorRoom = new ConnectorRoom(1, Math.Abs(roomPosition.z - (targetPosition.z + target.height)));
+                                connectorRoom.position = new IntCoords3(roomPosition.x + room.width / 2, level, targetPosition.z + target.height);
+                                connectorRooms.Add(connectorRoom);
+                                break;
+                            }
+                        case CardinalDirection.SOUTH:
+                            {
+                                room.walls[room.width / 2, room.height - 1] = doorways.NextWithReplacement();
+                                //TODO math
+                                break;
+                            }
+                        case CardinalDirection.EAST:
+                            {
+                                room.walls[room.width - 1, room.height / 2] = doorways.NextWithReplacement();
+                                //TODO math
+                                break;
+                            }
+                        case CardinalDirection.WEST:
+                            {
+                                room.walls[0, room.height / 2] = doorways.NextWithReplacement();
+                                //TODO math
+                                break;
+                            }
+                    }
                 }
             }
+
+            foreach (DungeonRoom room in connectorRooms)
+            {
+                for (int x = 0; x < room.width; x++)
+                    for (int y = 0; y < room.height; y++)
+                        room.floors[x, y] = connectors.NextWithReplacement();
+            }
+
+            levels[level].AddRange(connectorRooms);
         }
 
         BuildDungeon();
@@ -268,9 +345,7 @@ public class DungeonGenerator : MonoBehaviour
 
         for (int level = 0; level < numOfLevels; level++)
             foreach (DungeonRoom room in levels[level])
-            {
                 room.Generate(room.position.Value.x, room.position.Value.y, room.position.Value.z).transform.SetParent(dng.transform);
-            }
     }
 
     private void VerifyPath(DungeonRoom[,,] dungeon)
@@ -286,5 +361,19 @@ public class DungeonGenerator : MonoBehaviour
             statusUpdater.status = s;
 
         return null;
+    }
+
+    private struct Branch
+    {
+        public DungeonRoom centerRoom;
+        public List<DungeonRoom> leftRooms;
+        public List<DungeonRoom> rightRooms;
+
+        public Branch(DungeonRoom center)
+        {
+            centerRoom = center;
+            leftRooms = new List<DungeonRoom>();
+            rightRooms = new List<DungeonRoom>();
+        }
     }
 }

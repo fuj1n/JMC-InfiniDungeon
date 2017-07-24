@@ -13,9 +13,7 @@ public class DungeonGateway : MonoBehaviour
     private void OnMouseDown()
     {
         if (isPlayerInRange)
-        {
             player.transform.position = gatewayDestination.position;
-        }
     }
 
     private void OnTriggerStay(Collider other)

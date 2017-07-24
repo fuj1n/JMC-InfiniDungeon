@@ -12,7 +12,7 @@ public class I18n
 
     private I18n() { }
 
-    public static I18n Create(bool useLanguageDiscovery = true)
+    public static I18n Get(bool useLanguageDiscovery = true)
     {
         if (instance != null)
             return instance;

@@ -13,6 +13,9 @@ public class Dungeon : MonoBehaviour
     public DungeonTile[] doorways;
     [HideInInspector]
     public DungeonZoner[] zoners;
+    [HideInInspector]
+    public DungeonTile[] connectors;
+
     // Rooms
     [HideInInspector]
     public DungeonCustomRoom[] customRooms;
@@ -50,6 +53,10 @@ public class Dungeon : MonoBehaviour
             Transform zoners = tiles.Find("zoners");
             if (zoners)
                 this.zoners = zoners.GetComponentsInChildren<DungeonZoner>();
+
+            Transform connectors = tiles.Find("connectors");
+            if (connectors)
+                this.connectors = connectors.GetComponentsInChildren<DungeonTile>();
         }
 
         Transform rooms = transform.Find("rooms");

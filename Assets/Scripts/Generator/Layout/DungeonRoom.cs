@@ -34,7 +34,7 @@ public class DungeonRoom : System.Object
         walls = new DungeonTile[width, height];
     }
 
-    public GameObject Generate(float x, float y, float z)
+    public virtual GameObject Generate(float x, float y, float z)
     {
         GameObject room = new GameObject("room");
         Transform troom = room.transform;
