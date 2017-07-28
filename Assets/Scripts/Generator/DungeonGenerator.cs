@@ -369,7 +369,19 @@ public class DungeonGenerator : MonoBehaviour
             foreach (DungeonRoom room in levels[level])
                 room.Generate(room.position.Value.x, room.position.Value.y, room.position.Value.z).transform.SetParent(dng.transform);
 
-        yield return new WaitForSeconds(4F); // Wait a bit (because we're too fast to see my loading animation :/)
+        SetStatus("spawning.player");
+
+        //TODO summon player
+
+        SetStatus("spawning.enemies");
+
+        //TODO summon enemies
+
+        SetStatus("spawning.treasure");
+
+        //TODO summon treasure
+
+        yield return new WaitForSeconds(4F); // Wait a bit because we're too fast to see my loading animation :/
 
         Destroy(dungeon.gameObject);
         Destroy(gameObject);

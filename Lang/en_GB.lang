@@ -1,6 +1,7 @@
 $fuj1n.jmc.infinidungeon.lang
 $English (British)
 
+# Generator Strings
 dungeon.generator.planning=Planning the Dungeon
 dungeon.generator.shuffling=Shuffling the rooms a bit
 dungeon.generator.positioning=Positioning the rooms
@@ -8,3 +9,21 @@ dungeon.generator.connecting=Connecting the rooms
 dungeon.generator.building=Building the Dungeon
 dungeon.generator.spawning=Spawning Enemies
 dungeon.generator.loot=Generating Loot
+
+# Player Classes
+player.class.WARRIOR=Warrior
+player.class.MAGE=Mage
+player.class.SCOUNDREL=Scoundrel
+
+# Player Stats
+player.stats.str.name=Strength
+player.stats.dex.name=Dexterity
+player.stats.vit.name=Vitality
+player.stats.int.name=Intelligence
+
+player.stats.str.desc=How hard your melee hits are
+player.stats.dex.desc=Your mobility in battle, improves your dodge chance and attack speed
+player.stats.vit.desc=How many hit points you can take before you die
+player.stats.int.desc=The magnitude of your magical attacks for mages\nYour resistance to damage from all sources
+
+player.stats.primary=Primary stat for: %s
