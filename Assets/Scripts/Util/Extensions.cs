@@ -21,6 +21,8 @@ public static class Extensions
 
     public static T NextFrom<T>(this Random random, T[] array)
     {
+        if (array.Length == 0)
+            return default(T);
         return array[random.Next(0, array.Length)];
     }
 }

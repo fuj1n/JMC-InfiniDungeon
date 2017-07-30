@@ -39,6 +39,9 @@ public class DungeonGenerator : MonoBehaviour
     [Tooltip("The chance that the rooms will connect inter-branch (percentage)")]
     public int interbranchConnectChance = 25;
 
+    [Header("Spawns")]
+    public int enemyGenPasses = 20;
+
     private GameObject genScreen;
     private GenStatusUpdater statusUpdater;
 
@@ -279,7 +282,7 @@ public class DungeonGenerator : MonoBehaviour
                         if (r < upRooms.Count && random.NextBool(interbranchConnectChance))
                             curRooms[r].connections.Add(upRooms[r]);
                     }
-                }*/ 
+                }*/
             }
         }
 
@@ -396,11 +399,11 @@ public class DungeonGenerator : MonoBehaviour
 
         {
             SpawnPoint[] playerSpawns = dungeon.transform.Find("0").GetComponentsInChildren<SpawnPoint>();
-            SpawnPoint playerSpawnPoint = playerSpawns[random.Next(0, playerSpawns.Length)];
+            SpawnPoint playerSpawnPoint = random.NextFrom(playerSpawns);
             playerSpawn = playerSpawnPoint.transform.position + playerSpawnPoint.offset;
 
             foreach (SpawnPoint spawn in playerSpawnPoint.transform.parent.GetComponentsInChildren<SpawnPoint>())
-                Destroy(spawn);
+                DestroyImmediate(spawn);
         }
 
         SetStatus("spawning.teleporters");
@@ -436,7 +439,24 @@ public class DungeonGenerator : MonoBehaviour
 
         SetStatus("spawning.enemies");
 
-        //TODO summon enemies
+        Transform enemiesParent = new GameObject("enemies").transform;
+        for (int pass = 0; pass < enemyGenPasses; pass++)
+        {
+            for (int pass2 = 0; pass2 < roomsPerLevel * numOfLevels - random.Next(2, roomsPerLevel); pass2++)
+            {
+                SpawnPoint spawn = random.NextFrom(dungeon.transform.GetComponentsInChildren<SpawnPoint>());
+
+                if (!spawn)
+                    break;
+
+                EntityEnemy enemy = enemies.NextWithReplacement();
+
+                GameObject enemyInst = Instantiate(enemy.gameObject, enemiesParent);
+                enemyInst.transform.position = spawn.transform.position + spawn.offset;
+
+                Destroy(spawn);
+            }
+        }
 
         SetStatus("spawning.treasure");
 
@@ -454,9 +474,9 @@ public class DungeonGenerator : MonoBehaviour
         Destroy(gameObject);
 
         GameObject mods = new GameObject("modules");
-        foreach(UnityEngine.Object ob in Resources.LoadAll("Modules/"))
+        foreach (UnityEngine.Object ob in Resources.LoadAll("Modules/"))
         {
-            if(ob is GameObject)
+            if (ob is GameObject)
             {
                 GameObject mod = Instantiate((GameObject)ob);
                 mod.transform.SetParent(mods.transform);
