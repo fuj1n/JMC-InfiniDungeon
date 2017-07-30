@@ -1,43 +1,22 @@
 ﻿using System;
+using UnityEngine;
 
 public class DungeonZoner : DungeonTile, IComparable<DungeonZoner>
 {
-    public ZonerType type = ZonerType.ROOM;
+    [HideInInspector]
+    public Vector3 zonerLink;
 
-    public void Place(DungeonRoom src, DungeonRoom target, Random rand)
+    private void OnMouseDown()
     {
-        int sx, sy;
-        int tx, ty;
-        switch (type)
-        {
-            case ZonerType.ROOM:
-                sx = src.width / 2;
-                sy = src.height / 2;
-                tx = target.width / 2;
-                ty = target.height / 2;
-                break;
-            default:
-                throw new ArgumentException("Invalid zoner type");
-        }
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
 
-        DungeonRoom.Placement<DungeonZoner> srcZoner = new DungeonRoom.Placement<DungeonZoner>(src, sx, sy, this);
-        DungeonRoom.Placement<DungeonZoner> targetZoner = new DungeonRoom.Placement<DungeonZoner>(target, tx, ty, this);
+        if (Vector3.Distance(player.transform.position, transform.position) <= 2.5F)
+            player.transform.position = zonerLink;
 
-        src.zoners.Add(srcZoner);
-        target.zoners.Add(targetZoner);
-
-        src.zonerLinks.Add(srcZoner, targetZoner);
-        target.zonerLinks.Add(targetZoner, srcZoner);
     }
 
     public int CompareTo(DungeonZoner other)
     {
         return base.CompareTo(other);
-    }
-
-    [Serializable]
-    public enum ZonerType
-    {
-        ROOM = 0
     }
 }

@@ -60,8 +60,13 @@ public class DungeonGenerator : MonoBehaviour
 
     private bool generationComplete = false;
 
+    public static Vector2[] exitsCache;
+
     private void Awake()
     {
+        // DEBUG LINE
+        PlayerData.Instance = new PlayerData("John", PlayerData.PlayerClass.MAGE);
+
         if (dungeon)
         {
             dungeon = Instantiate(dungeon.gameObject, null).GetComponent<Dungeon>();
@@ -263,6 +268,18 @@ public class DungeonGenerator : MonoBehaviour
             for (int br = 1; br < branches.Count; br++)
             {
                 branches[br].centerRoom.connections.Add(branches[br - 1].centerRoom);
+
+                /*for (int dr = 0; dr < 2; dr++)
+                {
+                    List<DungeonRoom> curRooms = dr == 0 ? branches[br].leftRooms : branches[br].rightRooms;
+                    List<DungeonRoom> upRooms = dr == 0 ? branches[br - 1].leftRooms : branches[br - 1].rightRooms;
+
+                    for (int r = 0; r < curRooms.Count; r++)
+                    {
+                        if (r < upRooms.Count && random.NextBool(interbranchConnectChance))
+                            curRooms[r].connections.Add(upRooms[r]);
+                    }
+                }*/ 
             }
         }
 
@@ -363,15 +380,59 @@ public class DungeonGenerator : MonoBehaviour
     {
         SetStatus("building");
 
-        GameObject dng = new GameObject("Dungeon");
+        GameObject dungeon = new GameObject("Dungeon");
 
         for (int level = 0; level < numOfLevels; level++)
+        {
+            GameObject lvl = new GameObject(level.ToString());
+            lvl.transform.SetParent(dungeon.transform);
             foreach (DungeonRoom room in levels[level])
-                room.Generate(room.position.Value.x, room.position.Value.y, room.position.Value.z).transform.SetParent(dng.transform);
+                room.Generate(room.position.Value.x, room.position.Value.y, room.position.Value.z).transform.SetParent(lvl.transform);
+        }
 
         SetStatus("spawning.player");
 
-        //TODO summon player
+        Vector3 playerSpawn;
+
+        {
+            SpawnPoint[] playerSpawns = dungeon.transform.Find("0").GetComponentsInChildren<SpawnPoint>();
+            SpawnPoint playerSpawnPoint = playerSpawns[random.Next(0, playerSpawns.Length)];
+            playerSpawn = playerSpawnPoint.transform.position + playerSpawnPoint.offset;
+
+            foreach (SpawnPoint spawn in playerSpawnPoint.transform.parent.GetComponentsInChildren<SpawnPoint>())
+                Destroy(spawn);
+        }
+
+        SetStatus("spawning.teleporters");
+
+        exitsCache = new Vector2[levels.Length];
+
+        for (int level = 0; level < levels.Length - 1; level++)
+        {
+            SpawnPoint[] lowerSpawns = dungeon.transform.Find(level.ToString()).GetComponentsInChildren<SpawnPoint>();
+            SpawnPoint[] upperSpawns = dungeon.transform.Find((level + 1).ToString()).GetComponentsInChildren<SpawnPoint>();
+
+            SpawnPoint lowerSpawn = random.NextFrom(lowerSpawns);
+            SpawnPoint upperSpawn = random.NextFrom(upperSpawns);
+
+            DungeonZoner template = zoners.NextWithReplacement();
+
+            GameObject lowerZonerObject = Instantiate(template.gameObject, lowerSpawn.transform.parent, false);
+            GameObject upperZonerObject = Instantiate(template.gameObject, upperSpawn.transform.parent, false);
+
+            lowerZonerObject.transform.position = lowerSpawn.transform.position + lowerSpawn.offset;
+            upperZonerObject.transform.position = upperSpawn.transform.position + upperSpawn.offset;
+
+            DungeonZoner lowerZoner = lowerZonerObject.GetComponent<DungeonZoner>();
+            DungeonZoner upperZoner = upperZonerObject.GetComponent<DungeonZoner>();
+
+            lowerZoner.zonerLink = upperZoner.transform.position;
+            upperZoner.zonerLink = lowerZoner.transform.position;
+
+            exitsCache[level] = new Vector2(lowerZoner.transform.position.x, lowerZoner.transform.position.z);
+
+            print(level + ": " + lowerZoner.transform.position);
+        }
 
         SetStatus("spawning.enemies");
 
@@ -381,10 +442,33 @@ public class DungeonGenerator : MonoBehaviour
 
         //TODO summon treasure
 
+        SetStatus("spawning.exit");
+
+        //TODO summon exit
+
+        SetStatus("wait");
+
         yield return new WaitForSeconds(4F); // Wait a bit because we're too fast to see my loading animation :/
 
-        Destroy(dungeon.gameObject);
+        Destroy(this.dungeon.gameObject);
         Destroy(gameObject);
+
+        GameObject mods = new GameObject("modules");
+        foreach(UnityEngine.Object ob in Resources.LoadAll("Modules/"))
+        {
+            if(ob is GameObject)
+            {
+                GameObject mod = Instantiate((GameObject)ob);
+                mod.transform.SetParent(mods.transform);
+            }
+        }
+
+        Instantiate(Resources.Load<GameObject>(PlayerData.prefabs[PlayerData.Instance.playerClass]), playerSpawn, Quaternion.identity);
+
+        GameObject gl = new GameObject("Global Light");
+        Light globalLight = gl.AddComponent<Light>();
+        globalLight.type = LightType.Directional;
+        gl.transform.eulerAngles = new Vector3(50, -30, 0); // TODO proper lighting
     }
 
     private void VerifyPath(DungeonRoom[,,] dungeon)

@@ -7,8 +7,13 @@ dungeon.generator.shuffling=Shuffling the rooms a bit
 dungeon.generator.positioning=Positioning the rooms
 dungeon.generator.connecting=Connecting the rooms
 dungeon.generator.building=Building the Dungeon
-dungeon.generator.spawning=Spawning Enemies
 dungeon.generator.loot=Generating Loot
+dungeon.generator.spawning.player=Spawning Player
+dungeon.generator.spawning.teleporters=Spawning Teleporters
+dungeon.generator.spawning.enemies=Spawning Enemies
+dungeon.generator.spawning.treasure=Spawning Treasure
+dungeon.generator.spawning.exit=Spawning Exit
+dungeon.generator.wait=Waiting 4 seconds
 
 # Player Classes
 player.class.WARRIOR=Warrior
@@ -27,3 +32,6 @@ player.stats.vit.desc=How many hit points you can take before you die
 player.stats.int.desc=The magnitude of your magical attacks for mages\nYour resistance to damage from all sources
 
 player.stats.primary=Primary stat for: %s
+
+# Entities
+entity.slime.name=Slime

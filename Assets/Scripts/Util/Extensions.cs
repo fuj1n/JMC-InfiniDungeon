@@ -18,4 +18,9 @@ public static class Extensions
 
         return chance <= probability;
     }
+
+    public static T NextFrom<T>(this Random random, T[] array)
+    {
+        return array[random.Next(0, array.Length)];
+    }
 }
