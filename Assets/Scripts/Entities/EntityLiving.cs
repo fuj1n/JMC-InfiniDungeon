@@ -35,7 +35,7 @@ public abstract class EntityLiving : Entity
     {
         base.GetTooltip(tooltip);
 
-        tooltip.Add(FormatCodes.RESET + FormatCodes.DARK_GREY + FormatCodes.ITALIC + "Health: " + life);
+        tooltip.Add(FormatCodes.RED + FormatCodes.ITALIC + "entity.label.health: " + life + FormatCodes.ITALIC_E + FormatCodes.COL_E);
     }
 
     public virtual bool OnKill()

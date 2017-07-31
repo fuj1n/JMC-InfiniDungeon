@@ -34,4 +34,5 @@ player.stats.int.desc=The magnitude of your magical attacks for mages\nYour resi
 player.stats.primary=Primary stat for: %s
 
 # Entities
+entity.label.health=Health
 entity.slime.name=Slime

@@ -454,6 +454,8 @@ public class DungeonGenerator : MonoBehaviour
                 GameObject enemyInst = Instantiate(enemy.gameObject, enemiesParent);
                 enemyInst.transform.position = spawn.transform.position + spawn.offset;
 
+                enemyInst.GetComponent<EntityEnemy>().OnSpawn();
+
                 Destroy(spawn);
             }
         }
