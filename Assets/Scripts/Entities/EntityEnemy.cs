@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class EntityEnemy : EntityLiving, IComparable<EntityEnemy>
 {
-    public static EntityEnemy selectedEnemy;
-
     [Header("Generator")]
     public int weight;
 
@@ -29,21 +27,16 @@ public class EntityEnemy : EntityLiving, IComparable<EntityEnemy>
         return "entity." + name + ".name";
     }
 
-    private void OnMouseDown()
-    {
-        selectedEnemy = this;
-    }
-
     public override void GetTooltip(List<string> tooltip)
     {
         base.GetTooltip(tooltip);
 
-        if (selectedEnemy == this)
+        if (TargetTracker.target == this)
             tooltip.Add(FormatCodes.GOLD + "Selected" + FormatCodes.COL_E);
     }
 
     public override bool IsTooltipVisible()
     {
-        return base.IsTooltipVisible() || selectedEnemy == this;
+        return base.IsTooltipVisible() || TargetTracker.target == this;
     }
 }

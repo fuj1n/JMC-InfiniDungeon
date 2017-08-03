@@ -106,6 +106,28 @@ public class PlayerData
 
         public static readonly string[] STAT_NAMES = { "str", "dex", "vit", "int" };
         public static readonly string[] STAT_COLORS = { FormatCodes.CYAN, FormatCodes.YELLOW, FormatCodes.RED, FormatCodes.MAGENTA };
+
+        public float GetStat(Stat s)
+        {
+            switch (s)
+            {
+                case Stat.STRENGTH:
+                    return strength;
+                case Stat.DEXTERITY:
+                    return dexterity;
+                case Stat.VITALITY:
+                    return vitality;
+                case Stat.INTELLIGENCE:
+                    return intelligence;
+            }
+
+            return 0f;
+        }
+
+        public enum Stat
+        {
+            STRENGTH, DEXTERITY, VITALITY, INTELLIGENCE
+        }
     }
 
     public enum PlayerClass
@@ -140,6 +162,11 @@ public class PlayerData
     public Stats CalculateStats()
     {
         return rawStats + baseStats[playerClass]; // TODO stats based on inv
+    }
+
+    public float GetDamageMultiplierForStat(Stats.Stat stat)
+    {
+        return 1F; // TODO damage calculation
     }
 
     public void SaveData()

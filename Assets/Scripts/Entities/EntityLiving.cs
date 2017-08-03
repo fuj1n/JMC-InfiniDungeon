@@ -42,4 +42,9 @@ public abstract class EntityLiving : Entity
     {
         return true;
     }
+
+    private void OnMouseDown()
+    {
+        TargetTracker.target = this;
+    }
 }

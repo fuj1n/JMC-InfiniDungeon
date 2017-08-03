@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class PlayerDisplay : MonoBehaviour {
+public class PlayerDisplay : MonoBehaviour
+{
     GameObject currentModel;
 
     public void Switch(AdvancedSelector sel, AdvancedSelector.EventAction act)

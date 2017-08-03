@@ -15,13 +15,19 @@ dungeon.generator.spawning.treasure=Spawning Treasure
 dungeon.generator.spawning.exit=Spawning Exit
 dungeon.generator.wait=Waiting 4 seconds
 
-#Alerts
+# Alerts
+## Character Menu
 alerts.character.notype=Please select a character type
 alerts.character.noname=Please enter a character name
 alerts.character.nosel=Please select a character
+## Spells
+alerts.player.spell.lowlevel=You do not meet the level requirement for this spell
+alerts.player.spell.notarget=You need a target to cast this spell
+alerts.player.spell.notfacing=You need to be facing the target to cast this spell
+alerts.player.spell.cooldown=The spell is cooling down
 
 # User Interface
-##General
+## General
 gui.button.back=Back
 gui.button.cancel=Cancel
 gui.button.delete=Delete

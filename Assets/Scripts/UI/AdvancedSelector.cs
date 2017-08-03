@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System.Linq;
 
 public class AdvancedSelector : UIBehaviour, IPointerClickHandler, IEventSystemHandler
 {
@@ -89,8 +89,8 @@ public class AdvancedSelector : UIBehaviour, IPointerClickHandler, IEventSystemH
         if (!selectorGroups.ContainsKey(groupId))
             return null;
         return (from s in selectorGroups[groupId]
-               where s.isSelected
-               select s).SingleOrDefault(); 
+                where s.isSelected
+                select s).SingleOrDefault();
     }
 
     public enum EventAction
