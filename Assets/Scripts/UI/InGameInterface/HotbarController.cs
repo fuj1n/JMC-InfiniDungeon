@@ -7,7 +7,10 @@ public class HotbarController : MonoBehaviour
     public static readonly Color UNAVAILABLE = new Color(1F, 0F, 0F);
     public static readonly Color AVAILABLE = new Color(1F, 1F, 1F);
 
+    public static readonly Color COOLDOWN_VALUE = new Color(1F, 1F, 0F);
+
     private Image[] renderers;
+    private Text[] cooldowns;
 
     private void Start()
     {
@@ -15,6 +18,7 @@ public class HotbarController : MonoBehaviour
 
         SpellBase[] spells = controller.Spells;
         renderers = new Image[spells.Length];
+        cooldowns = new Text[spells.Length];
 
         for (int i = 0; i < spells.Length; i++)
         {
@@ -53,6 +57,14 @@ public class HotbarController : MonoBehaviour
             numberText.transform.SetParent(numberBackground.transform, false);
 
             numberText.text = PlayerControllerBase.keyLabels[i];
+
+            GameObject cooldownNumber = new GameObject("cooldownNumber");
+            cooldowns[i] = cooldownNumber.AddComponent<Text>();
+            cooldowns[i].font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            cooldowns[i].fontSize = 36;
+            cooldowns[i].alignment = TextAnchor.MiddleCenter;
+            cooldowns[i].transform.SetParent(rect, false);
+            cooldowns[i].color = COOLDOWN_VALUE;
         }
     }
 
@@ -64,6 +76,8 @@ public class HotbarController : MonoBehaviour
 
         for (int i = 0; i < spells.Length; i++)
         {
+            cooldowns[i].text = controller.IsInCooldown(spells[i]) ? controller.GetCooldown(spells[i]).ToString("F1") : "";
+
             if (controller.IsInCooldown(spells[i]))
                 renderers[i].color = COOLDOWN;
             else if (!spells[i].VerifyCanCastSpell(controller, true))

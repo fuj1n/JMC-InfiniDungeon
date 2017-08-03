@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public abstract class PlayerControllerBase : EntityLiving
@@ -49,10 +50,17 @@ public abstract class PlayerControllerBase : EntityLiving
     {
         base.Update();
 
-        foreach (KeyValuePair<SpellBase, float> kvp in cooldowns)
+        if (playerData.name.StartsWith("#") && Input.GetKeyDown(KeyCode.L))
+            playerData.GrantExperience(playerData.ExperienceToNextLevel - playerData.Experience);
+
+        SpellBase[] keys = cooldowns.Keys.ToArray();
+
+        for (int i = 0; i < keys.Length; i++)
         {
-            if (kvp.Value > .0F)
-                cooldowns[kvp.Key] = kvp.Value - Time.deltaTime;
+            SpellBase key = keys[i];
+
+            if (cooldowns[key] > .0F)
+                cooldowns[key] -= Time.deltaTime;
         }
 
         if (casting != null)
@@ -123,5 +131,10 @@ public abstract class PlayerControllerBase : EntityLiving
     public bool IsInCooldown(SpellBase spell)
     {
         return cooldowns.ContainsKey(spell) && cooldowns[spell] > .0F;
+    }
+
+    public float GetCooldown(SpellBase spell)
+    {
+        return IsInCooldown(spell) ? cooldowns[spell] : -1F;
     }
 }

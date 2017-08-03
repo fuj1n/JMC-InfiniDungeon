@@ -10,6 +10,8 @@ public abstract class EntityLiving : Entity
     public float maxLife;
     public float invulnerabilityTime = 1F;
 
+    public int xpReward = 1;
+
     protected bool isInvulnerable = false;
 
     protected virtual void Start()
@@ -51,6 +53,8 @@ public abstract class EntityLiving : Entity
 
     public virtual bool OnKill()
     {
+        PlayerData.Instance.GrantExperience(xpReward);
+
         return true;
     }
 

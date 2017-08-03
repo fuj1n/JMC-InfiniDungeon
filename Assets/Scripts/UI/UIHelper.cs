@@ -40,7 +40,7 @@ public class UIHelper : MonoBehaviour
 
         alertInst = Instantiate(Resources.Load<GameObject>("UI/" + alertName), transform);
 
-        alertInst.GetComponentInChildren<Text>().text = i18n.Translate(alert);
+        alertInst.transform.Find("Text").GetComponent<Text>().text = i18n.Translate(alert);
 
         yield return new WaitForSeconds(2.5F);
 

@@ -11,9 +11,9 @@ public class PlayerInfo : MonoBehaviour
     private RectTransform playerHPBackground;
     private Text playerHPVal;
 
-    //private RectTransform playerMP;
-    //private RectTransform playerMPBackground;
-    //private Text playerMPVal;
+    private RectTransform playerXP;
+    private RectTransform playerXPBackground;
+    private Text playerXPVal;
 
     private Text playerLevel;
     private Text playerClass;
@@ -26,9 +26,9 @@ public class PlayerInfo : MonoBehaviour
         playerHP = transform.Find("BarHP").Find("Status").GetComponent<RectTransform>();
         playerHPVal = transform.Find("BarHP").Find("Value").GetComponent<Text>();
 
-        //playerMPBackground = transform.Find("BarMP").GetComponent<RectTransform>();
-        //playerMP = transform.Find("BarMP").Find("Status").GetComponent<RectTransform>();
-        //playerMPVal = transform.Find("BarMP").Find("Value").GetComponent<Text>();
+        playerXPBackground = transform.Find("BarXP").GetComponent<RectTransform>();
+        playerXP = transform.Find("BarXP").Find("Status").GetComponent<RectTransform>();
+        playerXPVal = transform.Find("BarXP").Find("Value").GetComponent<Text>();
 
         playerLevel = transform.Find("PlayerLevel").GetComponent<Text>();
         playerClass = transform.Find("PlayerClass").GetComponent<Text>();
@@ -40,8 +40,12 @@ public class PlayerInfo : MonoBehaviour
         PlayerData data = PlayerData.Instance;
 
         playerName.text = data.name;
+
         playerHP.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, playerHPBackground.rect.width * (controller.life / data.GetMaxLife()));
         playerHPVal.text = (int)controller.life + " / " + (int)data.GetMaxLife();
+
+        playerXP.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, playerXPBackground.rect.width * ((float)data.Experience / data.ExperienceToNextLevel));
+        playerXPVal.text = data.Experience + " / " + data.ExperienceToNextLevel;
 
         playerLevel.text = "Level " + data.level;
         playerClass.text = i18n.Translate("player.class." + data.playerClass);

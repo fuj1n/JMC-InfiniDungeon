@@ -483,8 +483,7 @@ public class DungeonGenerator : MonoBehaviour
             Instantiate(playerOverride, playerSpawn, Quaternion.identity);
         else
         {
-            if (PlayerData.Instance == null)
-                PlayerData.Instance = new PlayerData("Debug Player", PlayerData.PlayerClass.MAGE);
+            PlayerData.Instance = new PlayerData("#Debug Player", PlayerData.PlayerClass.MAGE);
 
             Instantiate(Resources.Load<GameObject>(PlayerData.prefabs[PlayerData.Instance.playerClass]), playerSpawn, Quaternion.identity);
         }

@@ -50,14 +50,23 @@ public class PlayerData
     }
 
     public int level = 1;
-    public int experience = 0;
+    [JsonProperty]
+    private int experience = 0;
+    [JsonIgnore]
+    public int Experience
+    {
+        get
+        {
+            return experience;
+        }
+    }
 
     [JsonIgnore]
     public int ExperienceToNextLevel
     {
         get
         {
-            return BASE_XP * (int)Mathf.Pow(level, level);
+            return BASE_XP * (int)Mathf.Pow(level, 2);
         }
     }
 
@@ -174,8 +183,29 @@ public class PlayerData
         return 250 * (CalculateStats().vitality * 0.5F);
     }
 
+    public void GrantExperience(int xp)
+    {
+        experience += xp;
+
+        bool isLevelUp = false;
+
+        while (experience >= ExperienceToNextLevel)
+        {
+            isLevelUp = true;
+
+            experience -= ExperienceToNextLevel;
+            level++;
+        }
+
+        if (isLevelUp)
+            UIHelper.Alert("Level " + level, "LevelUp");
+    }
+
     public void SaveData()
     {
+        if (name.StartsWith("#"))
+            return;
+
         if (!Directory.Exists(DATA_LOCATION))
             Directory.CreateDirectory(DATA_LOCATION);
 
