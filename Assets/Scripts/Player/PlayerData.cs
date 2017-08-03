@@ -1,15 +1,29 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerData
 {
+    public const string DATA_LOCATION = "Data/Players/";
+
     public const int BASE_XP = 32;
 
     public static PlayerData Instance { get; set; }
 
     public readonly string name;
+
+    [JsonIgnore]
+    public string Snowflake
+    {
+        get
+        {
+            return snowflake;
+        }
+    }
+    private string snowflake = Guid.NewGuid().ToString("N");
 
     [JsonIgnore]
     public IInventory inventory = new InventoryBasic(60);
@@ -44,6 +58,15 @@ public class PlayerData
         get
         {
             return BASE_XP * (int)Mathf.Pow(level, level);
+        }
+    }
+
+    [JsonIgnore]
+    public string ClassName
+    {
+        get
+        {
+            return "player.class." + playerClass.ToString();
         }
     }
 
@@ -119,15 +142,18 @@ public class PlayerData
         return rawStats + baseStats[playerClass]; // TODO stats based on inv
     }
 
-    public void SaveData(string location)
+    public void SaveData()
     {
+        if (!Directory.Exists(DATA_LOCATION))
+            Directory.CreateDirectory(DATA_LOCATION);
+
         slotsData = new Dictionary<int, string>();
 
         for (int i = 0; i < inventory.GetSize(); i++)
             if (inventory.GetStackInSlot(i) != null)
                 slotsData[i] = inventory.GetStackInSlot(i).ToJSON();
 
-        File.WriteAllText(location, JsonConvert.SerializeObject(this));
+        File.WriteAllText(DATA_LOCATION + snowflake + ".json", JsonConvert.SerializeObject(this, Formatting.Indented));
 
         slotsData = null;
     }
@@ -140,8 +166,35 @@ public class PlayerData
             foreach (KeyValuePair<int, string> kvp in data.slotsData)
                 data.inventory.PlaceStack(ItemStack.FromJSON(kvp.Value), kvp.Key);
 
+        data.snowflake = Path.GetFileNameWithoutExtension(location);
+
         data.slotsData = null;
 
         return data;
+    }
+
+    public void DeleteSave()
+    {
+        string file = DATA_LOCATION + snowflake + ".json";
+
+        if (File.Exists(file))
+            File.Delete(file);
+    }
+
+    public static PlayerData[] ReadAllData()
+    {
+        if (!Directory.Exists(DATA_LOCATION))
+            return new PlayerData[0];
+
+        List<PlayerData> pd = new List<PlayerData>();
+
+        foreach (string f in Directory.GetFiles(DATA_LOCATION))
+        {
+            PlayerData data = ReadData(f);
+            if (data != null)
+                pd.Add(data);
+        }
+
+        return pd.OrderBy(d => d.name).ToArray();
     }
 }

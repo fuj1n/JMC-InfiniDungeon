@@ -110,7 +110,7 @@ public class I18n
                     continue;
                 }
 
-                data[ln.Substring(0, ln.IndexOf("="))] = ln.Substring(ln.IndexOf("=") + 1);
+                data[ln.Substring(0, ln.IndexOf("="))] = ln.Substring(ln.IndexOf("=") + 1).Replace("\\n", "\n");
             }
         }
     }

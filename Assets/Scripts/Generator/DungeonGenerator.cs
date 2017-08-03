@@ -9,7 +9,9 @@ using Weighted_Randomizer;
 
 public class DungeonGenerator : MonoBehaviour
 {
-    public GameObject player;
+    public GameObject playerOverride;
+
+    public bool isDedicated = true;
 
     [Header("Dungeon")]
     [Tooltip("The dungeon layout prefab")]
@@ -67,9 +69,6 @@ public class DungeonGenerator : MonoBehaviour
 
     private void Awake()
     {
-        // DEBUG LINE
-        PlayerData.Instance = new PlayerData("John", PlayerData.PlayerClass.MAGE);
-
         if (dungeon)
         {
             dungeon = Instantiate(dungeon.gameObject, null).GetComponent<Dungeon>();
@@ -109,29 +108,32 @@ public class DungeonGenerator : MonoBehaviour
 
     private void Start()
     {
-        sceneName = "Generated/" + dungeonName;
-
-        transform.SetParent(null, true);
-
-        genScreen = Resources.Load<GameObject>("Generator/Loader");
-        if (genScreen)
+        if (isDedicated)
         {
-            genScreen = Instantiate(genScreen);
-            genScreen.transform.SetParent(transform);
+            sceneName = "Generated/" + dungeonName;
 
-            statusUpdater = genScreen.GetComponentInChildren<GenStatusUpdater>();
+            transform.SetParent(null, true);
+
+            genScreen = Resources.Load<GameObject>("Generator/Loader");
+            if (genScreen)
+            {
+                genScreen = Instantiate(genScreen);
+                genScreen.transform.SetParent(transform);
+
+                statusUpdater = genScreen.GetComponentInChildren<GenStatusUpdater>();
+            }
+
+            DontDestroyOnLoad(gameObject);
+            scene = SceneManager.CreateScene(sceneName);
+
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                if (SceneManager.GetSceneAt(i) != scene)
+                    SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(i));
+            }
+
+            SceneManager.SetActiveScene(scene);
         }
-
-        DontDestroyOnLoad(gameObject);
-        scene = SceneManager.CreateScene(sceneName);
-
-        for (int i = 0; i < SceneManager.sceneCount; i++)
-        {
-            if (SceneManager.GetSceneAt(i) != scene)
-                SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(i));
-        }
-
-        SceneManager.SetActiveScene(scene);
 
         Thread thr = new Thread(new ThreadStart(GenerateScene));
         thr.Name = "Dungeon Generation Thread";
@@ -470,27 +472,34 @@ public class DungeonGenerator : MonoBehaviour
 
         SetStatus("wait");
 
-        yield return new WaitForSeconds(4F); // Wait a bit because we're too fast to see my loading animation :/
+        if (isDedicated)
+            yield return new WaitForSeconds(4F); // Wait a bit because we're too fast to see my loading animation :/
 
         Destroy(this.dungeon.gameObject);
         Destroy(gameObject);
 
-        GameObject mods = new GameObject("modules");
-        foreach (UnityEngine.Object ob in Resources.LoadAll("Modules/"))
+        if (playerOverride)
+            Instantiate(playerOverride, playerSpawn, Quaternion.identity);
+        else
+            Instantiate(Resources.Load<GameObject>(PlayerData.prefabs[PlayerData.Instance.playerClass]), playerSpawn, Quaternion.identity);
+
+        if (isDedicated)
         {
-            if (ob is GameObject)
+            GameObject mods = new GameObject("modules");
+            foreach (UnityEngine.Object ob in Resources.LoadAll("Modules/"))
             {
-                GameObject mod = Instantiate((GameObject)ob);
-                mod.transform.SetParent(mods.transform);
+                if (ob is GameObject)
+                {
+                    GameObject mod = Instantiate((GameObject)ob);
+                    mod.transform.SetParent(mods.transform);
+                }
             }
+
+            GameObject gl = new GameObject("Global Light");
+            Light globalLight = gl.AddComponent<Light>();
+            globalLight.type = LightType.Directional;
+            gl.transform.eulerAngles = new Vector3(50, -30, 0); // TODO proper lighting
         }
-
-        Instantiate(Resources.Load<GameObject>(PlayerData.prefabs[PlayerData.Instance.playerClass]), playerSpawn, Quaternion.identity);
-
-        GameObject gl = new GameObject("Global Light");
-        Light globalLight = gl.AddComponent<Light>();
-        globalLight.type = LightType.Directional;
-        gl.transform.eulerAngles = new Vector3(50, -30, 0); // TODO proper lighting
     }
 
     private void VerifyPath(DungeonRoom[,,] dungeon)
@@ -500,6 +509,9 @@ public class DungeonGenerator : MonoBehaviour
 
     private void SetStatus(string s)
     {
+        if (!isDedicated)
+            return;
+
         s = i18n.Translate("dungeon.generator." + s);
 
         if (statusUpdater)

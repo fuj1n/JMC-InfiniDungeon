@@ -15,6 +15,29 @@ dungeon.generator.spawning.treasure=Spawning Treasure
 dungeon.generator.spawning.exit=Spawning Exit
 dungeon.generator.wait=Waiting 4 seconds
 
+#Alerts
+alerts.character.notype=Please select a character type
+alerts.character.noname=Please enter a character name
+alerts.character.nosel=Please select a character
+
+# User Interface
+##General
+gui.button.back=Back
+gui.button.cancel=Cancel
+gui.button.delete=Delete
+gui.button.start=Start Game
+## Main Menu
+gui.menu.button.play=Single Player
+gui.menu.button.options=Options
+gui.menu.button.quit=Quit to Desktop
+## Character Screen
+gui.character.button.new=New Character
+gui.character.button.create=Create
+gui.character.text.mage=Mage\n<size=12>A ranged unit that relies on magical attacks.\nMain Stat: Intelligence</size>
+gui.character.text.warrior=Warrior\n<size=12>A melee unit that relies on his trusty sword.\nMain Stat: Strength</size>
+gui.character.text.scoundrel=Scoundrel\n<size=12>A ranged unit that relies on bows and crossbows.\nMain Stat: Dexterity</size>
+gui.character.placeholder.name=Enter name
+
 # Player Classes
 player.class.WARRIOR=Warrior
 player.class.MAGE=Mage

@@ -10,7 +10,7 @@ public class EntityEnemy : EntityLiving, IComparable<EntityEnemy>
     public int weight;
 
     [Header("Entity")]
-    public string name;
+    public new string name;
 
     private float id;
 
