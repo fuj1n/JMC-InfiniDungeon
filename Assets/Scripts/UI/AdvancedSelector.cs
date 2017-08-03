@@ -20,6 +20,9 @@ public class AdvancedSelector : UIBehaviour, IPointerClickHandler, IEventSystemH
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (isSelected)
+            return;
+
         isSelected = true;
 
         if (targetGraphic)
@@ -36,6 +39,9 @@ public class AdvancedSelector : UIBehaviour, IPointerClickHandler, IEventSystemH
 
     public void Deselect()
     {
+        if (!isSelected)
+            return;
+
         isSelected = false;
 
         if (targetGraphic)

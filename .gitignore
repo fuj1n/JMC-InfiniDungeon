@@ -1,3 +1,7 @@
+# InfiniDungeon Specific
+/[Dd]ata/
+
+# Unity Stuffs
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/

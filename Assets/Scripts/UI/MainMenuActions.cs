@@ -43,7 +43,7 @@ public class MainMenuActions : MonoBehaviour
         }
     }
 
-    private PlayerData FindCharacter(string snowflake)
+    public static PlayerData FindCharacter(string snowflake)
     {
         return (from d in PlayerList.playerData
                 where d.Snowflake == snowflake
