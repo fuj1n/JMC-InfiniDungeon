@@ -6,13 +6,14 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.ReorderableList.Internal {
+namespace Borodar.ReorderableList.Internal
+{
 
-	/// <summary>
-	/// Utility functions to assist with GUIs.
-	/// </summary>
-	/// <exclude/>
-	public static class GUIHelper {
+    /// <summary>
+    /// Utility functions to assist with GUIs.
+    /// </summary>
+    /// <exclude/>
+    public static class GUIHelper {
 
 		static GUIHelper() {
 			var tyGUIClip = Type.GetType("UnityEngine.GUIClip,UnityEngine");

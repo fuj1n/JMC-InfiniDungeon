@@ -4,9 +4,10 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.ReorderableList {
+namespace Borodar.ReorderableList
+{
 
-	internal sealed class GenericElementAdderMenu : IElementAdderMenu {
+    internal sealed class GenericElementAdderMenu : IElementAdderMenu {
 
 		private GenericMenu _innerMenu = new GenericMenu();
 

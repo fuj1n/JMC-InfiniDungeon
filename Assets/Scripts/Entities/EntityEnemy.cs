@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EntityEnemy : EntityLiving, IComparable<EntityEnemy>
@@ -25,14 +24,6 @@ public class EntityEnemy : EntityLiving, IComparable<EntityEnemy>
     public override string GetName()
     {
         return "entity." + name + ".name";
-    }
-
-    public override void GetTooltip(List<string> tooltip)
-    {
-        base.GetTooltip(tooltip);
-
-        if (TargetTracker.target == this)
-            tooltip.Add(FormatCodes.GOLD + "Selected" + FormatCodes.COL_E);
     }
 
     public override bool IsTooltipVisible()

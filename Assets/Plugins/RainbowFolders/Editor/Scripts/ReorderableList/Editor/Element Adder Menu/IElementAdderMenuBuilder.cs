@@ -3,13 +3,14 @@
 
 using System;
 
-namespace Borodar.ReorderableList {
+namespace Borodar.ReorderableList
+{
 
-	/// <summary>
-	/// Interface for building an <see cref="IElementAdderMenu"/>.
-	/// </summary>
-	/// <typeparam name="TContext">Type of the context object that elements can be added to.</typeparam>
-	public interface IElementAdderMenuBuilder<TContext> {
+    /// <summary>
+    /// Interface for building an <see cref="IElementAdderMenu"/>.
+    /// </summary>
+    /// <typeparam name="TContext">Type of the context object that elements can be added to.</typeparam>
+    public interface IElementAdderMenuBuilder<TContext> {
 
 		/// <summary>
 		/// Sets contract type of the elements that can be included in the <see cref="IElementAdderMenu"/>.

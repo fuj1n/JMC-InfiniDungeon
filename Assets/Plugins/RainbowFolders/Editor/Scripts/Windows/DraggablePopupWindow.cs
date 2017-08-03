@@ -14,7 +14,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using UnityEditor;
-using UnityEditor.Callbacks;
 using UnityEngine;
 
 namespace Borodar.RainbowFolders.Editor

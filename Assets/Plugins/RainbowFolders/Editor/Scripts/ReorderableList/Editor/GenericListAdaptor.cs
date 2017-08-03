@@ -5,21 +5,22 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Borodar.ReorderableList {
+namespace Borodar.ReorderableList
+{
 
-	/// <summary>
-	/// Reorderable list adaptor for generic list.
-	/// </summary>
-	/// <remarks>
-	/// <para>This adaptor can be subclassed to add special logic to item height calculation.
-	/// You may want to implement a custom adaptor class where specialised functionality
-	/// is needed.</para>
-	/// <para>List elements which implement the <see cref="System.ICloneable"/> interface are
-	/// cloned using that interface upon duplication; otherwise the item value or reference is
-	/// simply copied.</para>
-	/// </remarks>
-	/// <typeparam name="T">Type of list element.</typeparam>
-	public class GenericListAdaptor<T> : IReorderableListAdaptor {
+    /// <summary>
+    /// Reorderable list adaptor for generic list.
+    /// </summary>
+    /// <remarks>
+    /// <para>This adaptor can be subclassed to add special logic to item height calculation.
+    /// You may want to implement a custom adaptor class where specialised functionality
+    /// is needed.</para>
+    /// <para>List elements which implement the <see cref="System.ICloneable"/> interface are
+    /// cloned using that interface upon duplication; otherwise the item value or reference is
+    /// simply copied.</para>
+    /// </remarks>
+    /// <typeparam name="T">Type of list element.</typeparam>
+    public class GenericListAdaptor<T> : IReorderableListAdaptor {
 
 		private IList<T> _list;
 

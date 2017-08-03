@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.ReorderableList {
-	
-	/// <summary>
-	/// Base class for custom reorderable list control.
-	/// </summary>
-	public class ReorderableListControl {
+namespace Borodar.ReorderableList
+{
+
+    /// <summary>
+    /// Base class for custom reorderable list control.
+    /// </summary>
+    public class ReorderableListControl {
 
 		/// <summary>
 		/// Invoked to draw list item.

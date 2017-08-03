@@ -12,10 +12,10 @@
  * the License.
  */
 
-using UnityEngine;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using UnityEngine;
 using EditorUtility = Borodar.RainbowFolders.Editor.RainbowFoldersEditorUtility;
 
 namespace Borodar.RainbowFolders.Editor

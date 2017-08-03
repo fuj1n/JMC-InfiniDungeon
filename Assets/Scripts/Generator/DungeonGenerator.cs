@@ -478,11 +478,16 @@ public class DungeonGenerator : MonoBehaviour
         Destroy(this.dungeon.gameObject);
         Destroy(gameObject);
 
+
         if (playerOverride)
             Instantiate(playerOverride, playerSpawn, Quaternion.identity);
         else
-            Instantiate(Resources.Load<GameObject>(PlayerData.prefabs[PlayerData.Instance.playerClass]), playerSpawn, Quaternion.identity);
+        {
+            if (PlayerData.Instance == null)
+                PlayerData.Instance = new PlayerData("Debug Player", PlayerData.PlayerClass.MAGE);
 
+            Instantiate(Resources.Load<GameObject>(PlayerData.prefabs[PlayerData.Instance.playerClass]), playerSpawn, Quaternion.identity);
+        }
         if (isDedicated)
         {
             GameObject mods = new GameObject("modules");

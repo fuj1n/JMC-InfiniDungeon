@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.ReorderableList {
+namespace Borodar.ReorderableList
+{
 
-	/// <summary>
-	/// Utility class for drawing reorderable lists.
-	/// </summary>
-	public static class ReorderableListGUI {
+    /// <summary>
+    /// Utility class for drawing reorderable lists.
+    /// </summary>
+    public static class ReorderableListGUI {
 
 		/// <summary>
 		/// Default list item height is 18 pixels.

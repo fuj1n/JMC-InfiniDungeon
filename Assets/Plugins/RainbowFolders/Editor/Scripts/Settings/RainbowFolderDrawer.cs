@@ -13,8 +13,8 @@
  */
 
 using System;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 using KeyType = Borodar.RainbowFolders.Editor.Settings.RainbowFolder.KeyType;
 
 namespace Borodar.RainbowFolders.Editor.Settings

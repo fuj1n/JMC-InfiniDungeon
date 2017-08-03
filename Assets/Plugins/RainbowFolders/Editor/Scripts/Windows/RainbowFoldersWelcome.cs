@@ -12,7 +12,6 @@
  * the License.
  */
 
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 

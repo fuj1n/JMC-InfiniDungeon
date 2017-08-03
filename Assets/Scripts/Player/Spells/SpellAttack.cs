@@ -22,6 +22,6 @@
 
     public override void Cast(PlayerControllerBase controller)
     {
-        TargetTracker.target.Damage(damage);
+        TargetTracker.target.Damage(damage * controller.playerData.GetDamageMultiplierForStat(primaryStat));
     }
 }

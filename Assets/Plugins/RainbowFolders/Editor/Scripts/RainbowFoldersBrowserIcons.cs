@@ -12,11 +12,11 @@
  * the License.
  */
 
+using Borodar.RainbowFolders.Editor.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Borodar.RainbowFolders.Editor.Settings;
 using UnityEditor;
 using UnityEditor.VersionControl;
 using UnityEngine;

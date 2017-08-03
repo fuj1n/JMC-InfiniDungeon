@@ -3,13 +3,14 @@
 
 using UnityEngine;
 
-namespace Borodar.ReorderableList {
+namespace Borodar.ReorderableList
+{
 
-	/// <summary>
-	/// Adaptor allowing reorderable list control to interface with list data.
-	/// </summary>
-	/// <see cref="IReorderableListDropTarget"/>
-	public interface IReorderableListAdaptor {
+    /// <summary>
+    /// Adaptor allowing reorderable list control to interface with list data.
+    /// </summary>
+    /// <see cref="IReorderableListDropTarget"/>
+    public interface IReorderableListAdaptor {
 
 		/// <summary>
 		/// Gets count of elements in list.

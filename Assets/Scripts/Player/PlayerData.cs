@@ -169,6 +169,11 @@ public class PlayerData
         return 1F; // TODO damage calculation
     }
 
+    public float GetMaxLife()
+    {
+        return 250 * (CalculateStats().vitality * 0.5F);
+    }
+
     public void SaveData()
     {
         if (!Directory.Exists(DATA_LOCATION))

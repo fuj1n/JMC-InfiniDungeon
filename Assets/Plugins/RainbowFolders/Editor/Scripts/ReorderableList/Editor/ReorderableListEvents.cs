@@ -5,12 +5,13 @@ using System;
 using System.ComponentModel;
 using UnityEngine;
 
-namespace Borodar.ReorderableList {
-	
-	/// <summary>
-	/// Arguments which are passed to <see cref="AddMenuClickedEventHandler"/>.
-	/// </summary>
-	public sealed class AddMenuClickedEventArgs : EventArgs {
+namespace Borodar.ReorderableList
+{
+
+    /// <summary>
+    /// Arguments which are passed to <see cref="AddMenuClickedEventHandler"/>.
+    /// </summary>
+    public sealed class AddMenuClickedEventArgs : EventArgs {
 
 		/// <summary>
 		/// Gets adaptor to reorderable list container.

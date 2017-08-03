@@ -25,6 +25,7 @@ alerts.player.spell.lowlevel=You do not meet the level requirement for this spel
 alerts.player.spell.notarget=You need a target to cast this spell
 alerts.player.spell.notfacing=You need to be facing the target to cast this spell
 alerts.player.spell.cooldown=The spell is cooling down
+alerts.player.spell.outofrange=You are out of range
 
 # User Interface
 ## General
@@ -64,4 +65,5 @@ player.stats.primary=Primary stat for: %s
 
 # Entities
 entity.label.health=Health
+entity.label.selected=Selected
 entity.slime.name=Slime

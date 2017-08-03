@@ -5,10 +5,11 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.ReorderableList.Internal {
+namespace Borodar.ReorderableList.Internal
+{
 
-	/// <exclude/>
-	public enum ReorderableListTexture {
+    /// <exclude/>
+    public enum ReorderableListTexture {
 		Icon_Add_Normal = 0,
 		Icon_Add_Active,
 		Icon_AddMenu_Normal,

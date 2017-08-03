@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.ReorderableList {
+namespace Borodar.ReorderableList
+{
 
-	internal sealed class GenericElementAdderMenuBuilder<TContext> : IElementAdderMenuBuilder<TContext> {
+    internal sealed class GenericElementAdderMenuBuilder<TContext> : IElementAdderMenuBuilder<TContext> {
 
 		private static string NicifyTypeName(Type type) {
 			return ObjectNames.NicifyVariableName(type.Name);

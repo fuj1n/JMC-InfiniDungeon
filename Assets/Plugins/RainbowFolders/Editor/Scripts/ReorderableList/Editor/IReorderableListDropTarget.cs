@@ -1,20 +1,21 @@
 // Copyright (c) Rotorz Limited. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root.
 
-namespace Borodar.ReorderableList {
+namespace Borodar.ReorderableList
+{
 
-	/// <summary>
-	/// Can be implemented along with <see cref="IReorderableListAdaptor"/> when drop
-	/// insertion or ordering is desired.
-	/// </summary>
-	/// <remarks>
-	/// <para>This type of "drop" functionality can occur when the "drag" phase of the
-	/// drag and drop operation was initiated elsewhere. For example, a custom
-	/// <see cref="IReorderableListAdaptor"/> could insert entirely new items by
-	/// dragging and dropping from the Unity "Project" window.</para>
-	/// </remarks>
-	/// <see cref="IReorderableListAdaptor"/>
-	public interface IReorderableListDropTarget {
+    /// <summary>
+    /// Can be implemented along with <see cref="IReorderableListAdaptor"/> when drop
+    /// insertion or ordering is desired.
+    /// </summary>
+    /// <remarks>
+    /// <para>This type of "drop" functionality can occur when the "drag" phase of the
+    /// drag and drop operation was initiated elsewhere. For example, a custom
+    /// <see cref="IReorderableListAdaptor"/> could insert entirely new items by
+    /// dragging and dropping from the Unity "Project" window.</para>
+    /// </remarks>
+    /// <see cref="IReorderableListAdaptor"/>
+    public interface IReorderableListDropTarget {
 		
 		/// <summary>
 		/// Determines whether an item is being dragged and that it can be inserted

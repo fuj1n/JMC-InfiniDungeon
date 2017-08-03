@@ -3,16 +3,17 @@
 
 using UnityEngine;
 
-namespace Borodar.ReorderableList {
+namespace Borodar.ReorderableList
+{
 
-	/// <summary>
-	/// Interface for a menu command that can be included in an <see cref="IElementAdderMenu"/>
-	/// either by annotating an implementation of the <see cref="IElementAdderMenuCommand{TContext}"/>
-	/// interface with <see cref="ElementAdderMenuCommandAttribute"/> or directly by
-	/// calling <see cref="IElementAdderMenuBuilder{TContext}.AddCustomCommand"/>.
-	/// </summary>
-	/// <typeparam name="TContext">Type of the context object that elements can be added to.</typeparam>
-	public interface IElementAdderMenuCommand<TContext> {
+    /// <summary>
+    /// Interface for a menu command that can be included in an <see cref="IElementAdderMenu"/>
+    /// either by annotating an implementation of the <see cref="IElementAdderMenuCommand{TContext}"/>
+    /// interface with <see cref="ElementAdderMenuCommandAttribute"/> or directly by
+    /// calling <see cref="IElementAdderMenuBuilder{TContext}.AddCustomCommand"/>.
+    /// </summary>
+    /// <typeparam name="TContext">Type of the context object that elements can be added to.</typeparam>
+    public interface IElementAdderMenuCommand<TContext> {
 
 		/// <summary>
 		/// Gets the content of the menu command.

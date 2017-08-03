@@ -12,9 +12,9 @@
  * the License.
  */
 
+using Borodar.RainbowFolders.Editor.Settings;
 using System.Collections.Generic;
 using System.IO;
-using Borodar.RainbowFolders.Editor.Settings;
 using UnityEditor;
 using UnityEngine;
 using KeyType = Borodar.RainbowFolders.Editor.Settings.RainbowFolder.KeyType;

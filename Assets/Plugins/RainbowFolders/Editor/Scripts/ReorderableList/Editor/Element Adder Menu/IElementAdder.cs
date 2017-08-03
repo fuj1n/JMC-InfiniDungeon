@@ -3,14 +3,15 @@
 
 using System;
 
-namespace Borodar.ReorderableList {
+namespace Borodar.ReorderableList
+{
 
-	/// <summary>
-	/// Interface for an object which adds elements to a context object of the type
-	/// <typeparamref name="TContext"/>.
-	/// </summary>
-	/// <typeparam name="TContext">Type of the context object that elements can be added to.</typeparam>
-	public interface IElementAdder<TContext> {
+    /// <summary>
+    /// Interface for an object which adds elements to a context object of the type
+    /// <typeparamref name="TContext"/>.
+    /// </summary>
+    /// <typeparam name="TContext">Type of the context object that elements can be added to.</typeparam>
+    public interface IElementAdder<TContext> {
 
 		/// <summary>
 		/// Gets the context object.

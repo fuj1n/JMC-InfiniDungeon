@@ -9,6 +9,8 @@ public abstract class SpellBase
     public readonly TargetType spellTarget;
     public readonly float range;
 
+    public string icon;
+
     public SpellBase(int levelRequirement, float castTime, float cooldown, bool requiresLineOfSight = true, TargetType spellTarget = TargetType.SELECTED, float range = 25F)
     {
         this.levelRequirement = levelRequirement;
@@ -22,14 +24,28 @@ public abstract class SpellBase
             this.requiresLineOfSight = false;
     }
 
-    public virtual bool VerifyCanCastSpell(PlayerControllerBase controller)
+    public virtual bool VerifyCanCastSpell(PlayerControllerBase controller, bool hypothetical = false)
     {
         if (controller.playerData.level < levelRequirement)
-            UIHelper.Alert("alerts.player.spell.lowlevel", "InGameError");
+        {
+            if (!hypothetical)
+                UIHelper.Alert("alerts.player.spell.lowlevel", "InGameError");
+        }
         else if (spellTarget == TargetType.SELECTED && !TargetTracker.target)
-            UIHelper.Alert("alerts.player.spell.notarget", "InGameError");
-        else if (requiresLineOfSight && Vector3.Angle(TargetTracker.target.transform.position - controller.transform.position, controller.transform.forward) > 135)
-            UIHelper.Alert("alerts.player.spell.notfacing", "InGameError");
+        {
+            if (!hypothetical)
+                UIHelper.Alert("alerts.player.spell.notarget", "InGameError");
+        }
+        else if (requiresLineOfSight && Vector3.Angle(TargetTracker.target.transform.position - controller.transform.position, controller.transform.forward) > 90)
+        {
+            if (!hypothetical)
+                UIHelper.Alert("alerts.player.spell.notfacing", "InGameError");
+        }
+        else if (spellTarget == TargetType.SELECTED && Vector3.Distance(TargetTracker.target.transform.position, controller.transform.position) > range)
+        {
+            if (!hypothetical)
+                UIHelper.Alert("alerts.player.spell.outofrange", "InGameError");
+        }
         else
             return true;
 
@@ -37,6 +53,13 @@ public abstract class SpellBase
     }
 
     public abstract void Cast(PlayerControllerBase controller);
+
+    public SpellBase SetIcon(string icon)
+    {
+        this.icon = icon;
+
+        return this;
+    }
 
     public enum TargetType
     {

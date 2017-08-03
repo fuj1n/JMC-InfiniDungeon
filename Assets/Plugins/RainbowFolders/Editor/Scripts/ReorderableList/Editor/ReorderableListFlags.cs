@@ -3,19 +3,20 @@
 
 using System;
 
-namespace Borodar.ReorderableList {
+namespace Borodar.ReorderableList
+{
 
-	/// <summary>
-	/// Additional flags which can be passed into reorderable list field.
-	/// </summary>
-	/// <example>
-	/// <para>Multiple flags can be specified if desired:</para>
-	/// <code language="csharp"><![CDATA[
-	/// var flags = ReorderableListFlags.HideAddButton | ReorderableListFlags.HideRemoveButtons;
-	/// ReorderableListGUI.ListField(list, flags);
-	/// ]]></code>
-	/// </example>
-	[Flags]
+    /// <summary>
+    /// Additional flags which can be passed into reorderable list field.
+    /// </summary>
+    /// <example>
+    /// <para>Multiple flags can be specified if desired:</para>
+    /// <code language="csharp"><![CDATA[
+    /// var flags = ReorderableListFlags.HideAddButton | ReorderableListFlags.HideRemoveButtons;
+    /// ReorderableListGUI.ListField(list, flags);
+    /// ]]></code>
+    /// </example>
+    [Flags]
 	public enum ReorderableListFlags {
 		/// <summary>
 		/// Hide grab handles and disable reordering of list items.

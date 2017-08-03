@@ -12,8 +12,8 @@
  * the License.
  */
 
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 namespace Borodar.RainbowFolders.Editor
 {

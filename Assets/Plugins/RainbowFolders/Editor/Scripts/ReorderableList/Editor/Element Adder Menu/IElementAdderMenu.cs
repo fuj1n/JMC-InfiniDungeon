@@ -3,12 +3,13 @@
 
 using UnityEngine;
 
-namespace Borodar.ReorderableList {
+namespace Borodar.ReorderableList
+{
 
-	/// <summary>
-	/// Interface for a menu interface.
-	/// </summary>
-	public interface IElementAdderMenu {
+    /// <summary>
+    /// Interface for a menu interface.
+    /// </summary>
+    public interface IElementAdderMenu {
 
 		/// <summary>
 		/// Gets a value indicating whether the menu contains any items.

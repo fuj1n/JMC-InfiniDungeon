@@ -5,13 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Borodar.ReorderableList {
+namespace Borodar.ReorderableList
+{
 
-	/// <summary>
-	/// Provides meta information which is useful when creating new implementations of
-	/// the <see cref="IElementAdderMenuBuilder{TContext}"/> interface.
-	/// </summary>
-	public static class ElementAdderMeta {
+    /// <summary>
+    /// Provides meta information which is useful when creating new implementations of
+    /// the <see cref="IElementAdderMenuBuilder{TContext}"/> interface.
+    /// </summary>
+    public static class ElementAdderMeta {
 
 		#region Adder Menu Command Types
 

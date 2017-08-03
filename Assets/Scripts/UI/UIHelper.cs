@@ -27,13 +27,16 @@ public class UIHelper : MonoBehaviour
     public static void Alert(string alert, string alertName = "Alert")
     {
         UIHelper inst = GetInstance();
+
+        inst.StopAllCoroutines();
+
         inst.StartCoroutine(inst._Alert(alert, alertName));
     }
 
     public IEnumerator _Alert(string alert, string alertName)
     {
         if (alertInst)
-            yield break;
+            Destroy(alertInst);
 
         alertInst = Instantiate(Resources.Load<GameObject>("UI/" + alertName), transform);
 

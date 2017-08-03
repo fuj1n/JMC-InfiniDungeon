@@ -3,6 +3,8 @@ using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
 {
+    protected bool doTooltip = true;
+
     private bool mouseOver = false;
     private Transform player;
 
@@ -34,7 +36,7 @@ public abstract class Entity : MonoBehaviour
         tooltipText.richText = true;
     }
 
-    public virtual void Update()
+    protected virtual void Update()
     {
         if (!player)
         {

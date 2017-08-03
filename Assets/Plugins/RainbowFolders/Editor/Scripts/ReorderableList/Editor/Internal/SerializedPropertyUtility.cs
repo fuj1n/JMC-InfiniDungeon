@@ -5,12 +5,13 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.ReorderableList.Internal {
+namespace Borodar.ReorderableList.Internal
+{
 
-	/// <summary>
-	/// Utility functionality for <see cref="SerializedPropertyAdaptor"/> implementations.
-	/// </summary>
-	public static class SerializedPropertyUtility {
+    /// <summary>
+    /// Utility functionality for <see cref="SerializedPropertyAdaptor"/> implementations.
+    /// </summary>
+    public static class SerializedPropertyUtility {
 
 		/// <summary>
 		/// Reset the value of a property.

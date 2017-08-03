@@ -5,12 +5,13 @@ using Borodar.ReorderableList.Internal;
 using UnityEditor;
 using UnityEngine;
 
-namespace Borodar.ReorderableList {
-	
-	/// <summary>
-	/// Styles for the <see cref="ReorderableListControl"/>.
-	/// </summary>
-	public static class ReorderableListStyles {
+namespace Borodar.ReorderableList
+{
+
+    /// <summary>
+    /// Styles for the <see cref="ReorderableListControl"/>.
+    /// </summary>
+    public static class ReorderableListStyles {
 
 		static ReorderableListStyles() {
 			Title = new GUIStyle();
