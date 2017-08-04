@@ -26,6 +26,7 @@ alerts.player.spell.notarget=You need a target to cast this spell
 alerts.player.spell.notfacing=You need to be facing the target to cast this spell
 alerts.player.spell.cooldown=The spell is cooling down
 alerts.player.spell.outofrange=You are out of range
+alerts.player.spell.maxhealth=You are already at max life
 ## Player Events
 alerts.player.levelup=Congratulations, you've reached
 

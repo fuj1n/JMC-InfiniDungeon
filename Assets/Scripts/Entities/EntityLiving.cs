@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public abstract class EntityLiving : Entity
 {
     [NonSerialized]
     public float life;
     public float maxLife;
-    public float invulnerabilityTime = 1F;
 
     public int xpReward = 1;
-
-    protected bool isInvulnerable = false;
 
     protected virtual void Start()
     {
@@ -21,24 +16,10 @@ public abstract class EntityLiving : Entity
 
     public virtual void Damage(float rawDamage)
     {
-        if (isInvulnerable)
-            return;
-
         life -= rawDamage;
-
-        StartCoroutine(InvulnerabilityTimer());
 
         if (life <= 0 && OnKill())
             Destroy(gameObject);
-    }
-
-    protected virtual IEnumerator InvulnerabilityTimer()
-    {
-        isInvulnerable = true;
-
-        yield return new WaitForSeconds(invulnerabilityTime);
-
-        isInvulnerable = false;
     }
 
     public override void GetTooltip(List<string> tooltip)

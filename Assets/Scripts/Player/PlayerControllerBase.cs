@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -14,6 +15,9 @@ public abstract class PlayerControllerBase : EntityLiving
 
     private SpellBase casting;
     private float progress;
+
+    private float regenSpeed = 1.3F;
+    private float regenPotency = 0.05F;
 
     public float Progress
     {
@@ -44,6 +48,8 @@ public abstract class PlayerControllerBase : EntityLiving
         maxLife = playerData.GetMaxLife();
 
         FillSpells();
+
+        StartCoroutine(DoRegeneration());
     }
 
     protected override void Update()
@@ -111,7 +117,21 @@ public abstract class PlayerControllerBase : EntityLiving
         }
     }
 
+    protected virtual IEnumerator DoRegeneration()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(regenSpeed);
+            Heal(playerData.GetMaxLife() * regenPotency);
+        }
+    }
+
     protected abstract void FillSpells();
+
+    public void Heal(float health)
+    {
+        life = Mathf.Clamp(life + health, 0F, playerData.GetMaxLife());
+    }
 
     public override bool IsTooltipVisible()
     {
