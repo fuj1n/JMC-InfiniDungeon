@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public abstract class PlayerControllerBase : EntityLiving
 {
@@ -30,7 +32,7 @@ public abstract class PlayerControllerBase : EntityLiving
         }
     }
 
-    [HideInInspector]
+    [NonSerialized]
     public PlayerData playerData = PlayerData.Instance;
 
     public SpellBase[] Spells
@@ -43,6 +45,11 @@ public abstract class PlayerControllerBase : EntityLiving
 
     protected void Awake()
     {
+        type = TargetableType.PLAYER;
+
+        if (playerData == null)
+            return;
+
         activeInstance = this;
 
         maxLife = playerData.GetMaxLife();
@@ -141,6 +148,13 @@ public abstract class PlayerControllerBase : EntityLiving
     public override string GetName()
     {
         return playerData.name;
+    }
+
+    public override bool OnKill()
+    {
+        SceneManager.LoadScene("Scenes/MainMenu"); // TODO death screen
+
+        return true;
     }
 
     public static PlayerControllerBase GetActiveInstance()

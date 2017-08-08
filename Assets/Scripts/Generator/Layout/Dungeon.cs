@@ -1,31 +1,32 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Dungeon : MonoBehaviour
 {
     // Tiles
-    [HideInInspector]
+    [NonSerialized]
     public DungeonTile[] floors;
-    [HideInInspector]
+    [NonSerialized]
     public DungeonTile[] walls;
-    [HideInInspector]
+    [NonSerialized]
     public DungeonTile[] ceilings;
-    [HideInInspector]
+    [NonSerialized]
     public DungeonTile[] doorways;
-    [HideInInspector]
+    [NonSerialized]
     public DungeonZoner[] zoners;
-    [HideInInspector]
+    [NonSerialized]
     public DungeonTile[] connectors;
 
     // Rooms
-    [HideInInspector]
+    [NonSerialized]
     public DungeonCustomRoom[] customRooms;
 
     // Components
-    [HideInInspector]
+    [NonSerialized]
     public DungeonComponent[] components;
 
     // Enemies
-    [HideInInspector]
+    [NonSerialized]
     public EntityEnemy[] enemies;
 
     private void Awake()

@@ -14,8 +14,10 @@ public abstract class EntityLiving : Entity
         life = maxLife;
     }
 
-    public virtual void Damage(float rawDamage)
+    public override void Damage(Targetable source, float rawDamage)
     {
+        base.Damage(source, rawDamage);
+
         life -= rawDamage;
 
         if (life <= 0 && OnKill())

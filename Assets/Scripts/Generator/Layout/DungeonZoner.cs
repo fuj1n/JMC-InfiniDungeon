@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DungeonZoner : DungeonTile, IComparable<DungeonZoner>
 {
-    [HideInInspector]
+    [NonSerialized]
     public Vector3 zonerLink;
 
     private void OnMouseDown()

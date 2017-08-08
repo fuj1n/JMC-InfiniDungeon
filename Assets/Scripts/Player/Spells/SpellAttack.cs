@@ -4,7 +4,7 @@
     public PlayerData.Stats.Stat primaryStat;
 
     public SpellAttack(int levelRequirement, float castTime, float cooldown, bool requiresLineOfSight = true, TargetType spellTarget = TargetType.SELECTED, float range = 25) : base(levelRequirement, castTime, cooldown, requiresLineOfSight, spellTarget, range)
-    {}
+    { }
 
     public SpellAttack SetDamage(float damage)
     {
@@ -22,6 +22,6 @@
 
     public override void Cast(PlayerControllerBase controller)
     {
-        TargetTracker.target.Damage(damage * controller.playerData.GetDamageMultiplierForStat(primaryStat));
+        TargetTracker.target.Damage(controller, damage * controller.playerData.GetDamageMultiplierForStat(primaryStat));
     }
 }
