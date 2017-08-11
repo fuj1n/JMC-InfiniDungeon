@@ -13,7 +13,7 @@ public class EntityEnemy : EntityLiving, IComparable<EntityEnemy>
 
     private void Awake()
     {
-        type = TargetableType.ENEMY;
+        faction = TargetableFaction.ENEMY;
 
         id = UnityEngine.Random.Range(float.MinValue, float.MaxValue);
     }

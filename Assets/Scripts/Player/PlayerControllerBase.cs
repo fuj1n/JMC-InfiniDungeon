@@ -45,7 +45,7 @@ public abstract class PlayerControllerBase : EntityLiving
 
     protected void Awake()
     {
-        type = TargetableType.PLAYER;
+        faction = TargetableFaction.PLAYER;
 
         if (playerData == null)
             return;
@@ -76,14 +76,29 @@ public abstract class PlayerControllerBase : EntityLiving
                 cooldowns[key] -= Time.deltaTime;
         }
 
-        if (casting != null)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            InterfaceController ic = InterfaceController.GetInstance();
+
+            if (ic && (ic.IsInterfaceOpen(InterfaceController.Side.LEFT) || ic.IsInterfaceOpen(InterfaceController.Side.RIGHT)))
+            {
+                ic.CloseInterface(InterfaceController.Side.LEFT);
+                ic.CloseInterface(InterfaceController.Side.RIGHT);
+            }
+            else if (casting != null)
             {
                 casting = null;
                 return;
             }
+            else
+            {
+                TargetTracker.target = null;
+                return;
+            }
+        }
 
+        if (casting != null)
+        {
             if (progress >= casting.castTime)
             {
                 if (casting.VerifyCanCastSpell(this))
@@ -97,12 +112,6 @@ public abstract class PlayerControllerBase : EntityLiving
             {
                 progress += Time.deltaTime;
             }
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            TargetTracker.target = null;
             return;
         }
 

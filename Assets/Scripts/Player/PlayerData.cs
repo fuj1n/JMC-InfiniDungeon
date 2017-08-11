@@ -26,7 +26,7 @@ public class PlayerData
     private string snowflake = Guid.NewGuid().ToString("N");
 
     [JsonIgnore]
-    public IInventory inventory = new InventoryBasic(60);
+    public IInventory inventory = new InventoryBasic("inventory.player", 60);
 
     public readonly PlayerClass playerClass;
     public Stats rawStats;
@@ -175,7 +175,21 @@ public class PlayerData
 
     public float GetDamageMultiplierForStat(Stats.Stat stat)
     {
-        return 1F; // TODO damage calculation
+        Stats s = CalculateStats();
+
+        float mult = .25F;
+
+        switch (stat)
+        {
+            case Stats.Stat.DEXTERITY:
+                return 1 + s.dexterity * mult;
+            case Stats.Stat.INTELLIGENCE:
+                return 1 + s.intelligence * mult;
+            case Stats.Stat.STRENGTH:
+                return 1 + s.strength * mult;
+        }
+
+        return 1F;
     }
 
     public float GetMaxLife()
@@ -226,7 +240,7 @@ public class PlayerData
 
         if (data.slotsData != null)
             foreach (KeyValuePair<int, string> kvp in data.slotsData)
-                data.inventory.PlaceStack(ItemStack.FromJSON(kvp.Value), kvp.Key);
+                data.inventory.SetStack(ItemStack.FromJSON(kvp.Value), kvp.Key);
 
         data.snowflake = Path.GetFileNameWithoutExtension(location);
 

@@ -10,7 +10,7 @@ public class Targetable : MonoBehaviour
     public event OnDamaged onDamaged;
 
     [NonSerialized]
-    public TargetableType type = TargetableType.NEUTRAL;
+    public TargetableFaction faction = TargetableFaction.NEUTRAL;
 
     private void OnEnable()
     {
@@ -28,7 +28,7 @@ public class Targetable : MonoBehaviour
             onDamaged(source);
     }
 
-    public enum TargetableType
+    public enum TargetableFaction
     {
         NEUTRAL,
         PLAYER,

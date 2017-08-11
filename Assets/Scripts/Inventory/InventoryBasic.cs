@@ -1,17 +1,17 @@
-﻿using System;
-
-public class InventoryBasic : IInventory
+﻿public class InventoryBasic : IInventory
 {
     private ItemStack[] inventory;
+    private string name;
 
-    public InventoryBasic(int size)
+    public InventoryBasic(string name, int size)
     {
+        this.name = name;
         inventory = new ItemStack[size];
     }
 
     public int GetSize()
     {
-        return inventory.GetLength(0);
+        return inventory.Length;
     }
 
     public ItemStack GetStackInSlot(int slot)
@@ -52,6 +52,14 @@ public class InventoryBasic : IInventory
         return i;
     }
 
+    public void SetStack(ItemStack i, int slot)
+    {
+        if (!TestBounds(slot))
+            return;
+
+        inventory[slot] = i;
+    }
+
     public bool PlaceStack(ItemStack i)
     {
         for (int slot = 0; slot < GetSize(); slot++)
@@ -63,7 +71,7 @@ public class InventoryBasic : IInventory
 
     public bool PlaceStack(ItemStack i, int slot)
     {
-        if (!TestBounds(slot))
+        if (!TestBounds(slot) || i == null)
             return false;
 
         if (inventory[slot] == null)
@@ -83,11 +91,11 @@ public class InventoryBasic : IInventory
 
     public bool TestBounds(int slot)
     {
-        return slot > 0 && slot < GetSize();
+        return slot >= 0 && slot < GetSize();
     }
 
     public string GetName()
     {
-        throw new NotImplementedException();
+        return name;
     }
 }

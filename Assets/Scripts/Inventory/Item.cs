@@ -4,10 +4,14 @@ public class Item
 {
     public static readonly Item[] ITEMS = new Item[256];
 
+    public static readonly Item ITEM_TEST = new Item(0).SetUnlocalizedName("test").SetMaxStackSize(32).SetIcon("Weapon_01");
+
     private string unlocalizedName = "undefined";
     private int maxStackSize = 64;
 
     public readonly int itemId;
+
+    private string icon;
 
     public Item(int id)
     {
@@ -50,5 +54,17 @@ public class Item
     {
         unlocalizedName = name;
         return this;
+    }
+
+    public Item SetIcon(string icon)
+    {
+        this.icon = icon;
+
+        return this;
+    }
+
+    public virtual string GetIcon(ItemStack stack)
+    {
+        return icon;
     }
 }

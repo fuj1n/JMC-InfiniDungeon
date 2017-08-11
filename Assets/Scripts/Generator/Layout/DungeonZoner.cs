@@ -10,7 +10,7 @@ public class DungeonZoner : DungeonTile, IComparable<DungeonZoner>
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
-        if (Vector3.Distance(player.transform.position, transform.position) <= 2.5F)
+        if (Vector3.Distance(player.transform.position, transform.position) <= 5F)
             player.transform.position = zonerLink;
 
     }

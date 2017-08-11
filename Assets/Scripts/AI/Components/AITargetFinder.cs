@@ -11,7 +11,7 @@ public class AITargetFinder : AIComponent
     public float loseRange = 25F;
 
     public float scanInterval = 2F;
-    public Targetable.TargetableType type = Targetable.TargetableType.PLAYER;
+    public Targetable.TargetableFaction faction = Targetable.TargetableFaction.PLAYER;
 
     private AITargetInfo targetInfo;
 
@@ -43,14 +43,11 @@ public class AITargetFinder : AIComponent
         if (!targetInfo.target)
         {
             Targetable newTarget = (from t in Targetable.cache
-                                    where t.gameObject != gameObject && t.type == type && Vector3.Distance(transform.position, t.transform.position) <= range
+                                    where t.gameObject != gameObject && t.faction == faction && Vector3.Distance(transform.position, t.transform.position) <= range
                                     select t).OrderBy(t => Vector3.Distance(transform.position, t.transform.position)).FirstOrDefault();
 
             if (newTarget)
-            {
                 targetInfo.target = newTarget;
-                Debug.Log("Targetting " + newTarget.name);
-            }
         }
     }
 

@@ -88,10 +88,10 @@ public sealed class AIController : MonoBehaviour
                 awaits.Dequeue();
             }
             else
-                break;
+                return;
 
-        if (awaits.Count > 0)
-            return;
+        //if (awaits.Count > 0)
+        //    return;
 
         if (actions.Count > 0)
         {

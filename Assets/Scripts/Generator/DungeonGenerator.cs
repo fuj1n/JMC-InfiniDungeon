@@ -434,6 +434,9 @@ public class DungeonGenerator : MonoBehaviour
             lowerZoner.zonerLink = upperZoner.transform.position;
             upperZoner.zonerLink = lowerZoner.transform.position;
 
+            foreach (SpawnPoint spawn in upperSpawn.transform.parent.GetComponentsInChildren<SpawnPoint>())
+                DestroyImmediate(spawn);
+
             exitsCache[level] = new Vector2(lowerZoner.transform.position.x, lowerZoner.transform.position.z);
 
             print(level + ": " + lowerZoner.transform.position);
@@ -491,13 +494,17 @@ public class DungeonGenerator : MonoBehaviour
         if (isDedicated)
         {
             GameObject mods = new GameObject("modules");
-            foreach (UnityEngine.Object ob in Resources.LoadAll("Modules/"))
+            foreach (GameObject ob in Resources.LoadAll<GameObject>("Modules/"))
             {
-                if (ob is GameObject)
+                GameObject mod = Instantiate(ob);
+
+                if (mod.GetComponent<ModuleDisable>() && mod.GetComponent<ModuleDisable>().isActiveAndEnabled)
                 {
-                    GameObject mod = Instantiate((GameObject)ob);
-                    mod.transform.SetParent(mods.transform);
+                    Destroy(mod);
+                    continue;
                 }
+
+                mod.transform.SetParent(mods.transform);
             }
 
             GameObject gl = new GameObject("Global Light");

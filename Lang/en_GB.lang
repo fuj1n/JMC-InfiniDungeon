@@ -70,3 +70,8 @@ player.stats.primary=Primary stat for: %s
 entity.label.health=Health
 entity.label.selected=Selected
 entity.slime.name=Slime
+
+# Interface
+## Inventory
+interface.inventory.armor=Armor
+interface.inventory.player=Inventory

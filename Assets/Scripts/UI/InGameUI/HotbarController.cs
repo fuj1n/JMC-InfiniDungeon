@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class HotbarController : MonoBehaviour
 {
-    public static readonly Color COOLDOWN = new Color(.20F, .20F, .20F);
     public static readonly Color UNAVAILABLE = new Color(1F, 0F, 0F);
+    public static readonly Color UNUSABLE = new Color(.20F, .20F, .20F);
     public static readonly Color AVAILABLE = new Color(1F, 1F, 1F);
 
     public static readonly Color COOLDOWN_VALUE = new Color(1F, 1F, 0F);
@@ -78,10 +78,10 @@ public class HotbarController : MonoBehaviour
         {
             cooldowns[i].text = controller.IsInCooldown(spells[i]) ? controller.GetCooldown(spells[i]).ToString("F1") : "";
 
-            if (controller.IsInCooldown(spells[i]))
-                renderers[i].color = COOLDOWN;
-            else if (!spells[i].VerifyCanCastSpell(controller, true))
+            if (!spells[i].CompareLevelRequirement(controller))
                 renderers[i].color = UNAVAILABLE;
+            else if (controller.IsInCooldown(spells[i]) || !spells[i].VerifyCanCastSpell(controller, true))
+                renderers[i].color = UNUSABLE;
             else
                 renderers[i].color = AVAILABLE;
         }

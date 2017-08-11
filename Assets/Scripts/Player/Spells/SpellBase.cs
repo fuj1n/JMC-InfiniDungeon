@@ -26,7 +26,7 @@ public abstract class SpellBase
 
     public virtual bool VerifyCanCastSpell(PlayerControllerBase controller, bool hypothetical = false)
     {
-        if (controller.playerData.level < levelRequirement)
+        if (!CompareLevelRequirement(controller))
         {
             if (!hypothetical)
                 UIHelper.Alert("alerts.player.spell.lowlevel", "InGameError");
@@ -50,6 +50,11 @@ public abstract class SpellBase
             return true;
 
         return false;
+    }
+
+    public virtual bool CompareLevelRequirement(PlayerControllerBase controller)
+    {
+        return controller.playerData.level >= levelRequirement;
     }
 
     public abstract void Cast(PlayerControllerBase controller);
