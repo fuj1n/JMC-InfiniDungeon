@@ -43,7 +43,7 @@ public abstract class PlayerControllerBase : EntityLiving
         }
     }
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         faction = TargetableFaction.PLAYER;
 
@@ -57,6 +57,26 @@ public abstract class PlayerControllerBase : EntityLiving
         FillSpells();
 
         StartCoroutine(DoRegeneration());
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        PauseController.canPauseFunc = () =>
+        {
+            InterfaceController ic = InterfaceController.GetInstance();
+            if (ic && (ic.IsInterfaceOpen(InterfaceController.Side.LEFT) || ic.IsInterfaceOpen(InterfaceController.Side.RIGHT)))
+                return false;
+
+            if (casting != null)
+                return false;
+
+            if (TargetTracker.target != null)
+                return false;
+
+            return true;
+        };
     }
 
     protected override void Update()
@@ -74,27 +94,6 @@ public abstract class PlayerControllerBase : EntityLiving
 
             if (cooldowns[key] > .0F)
                 cooldowns[key] -= Time.deltaTime;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            InterfaceController ic = InterfaceController.GetInstance();
-
-            if (ic && (ic.IsInterfaceOpen(InterfaceController.Side.LEFT) || ic.IsInterfaceOpen(InterfaceController.Side.RIGHT)))
-            {
-                ic.CloseInterface(InterfaceController.Side.LEFT);
-                ic.CloseInterface(InterfaceController.Side.RIGHT);
-            }
-            else if (casting != null)
-            {
-                casting = null;
-                return;
-            }
-            else
-            {
-                TargetTracker.target = null;
-                return;
-            }
         }
 
         if (casting != null)
@@ -128,6 +127,30 @@ public abstract class PlayerControllerBase : EntityLiving
                     continue;
                 progress = 0;
                 casting = spells[i];
+                return;
+            }
+        }
+    }
+
+    protected virtual void LateUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            InterfaceController ic = InterfaceController.GetInstance();
+
+            if (ic && (ic.IsInterfaceOpen(InterfaceController.Side.LEFT) || ic.IsInterfaceOpen(InterfaceController.Side.RIGHT)))
+            {
+                ic.CloseInterface(InterfaceController.Side.LEFT);
+                ic.CloseInterface(InterfaceController.Side.RIGHT);
+            }
+            else if (casting != null)
+            {
+                casting = null;
+                return;
+            }
+            else
+            {
+                TargetTracker.target = null;
                 return;
             }
         }

@@ -48,6 +48,9 @@ gui.character.text.mage=Mage\n<size=12>A ranged unit that relies on magical atta
 gui.character.text.warrior=Warrior\n<size=12>A melee unit that relies on his trusty sword.\nMain Stat: Strength</size>
 gui.character.text.scoundrel=Scoundrel\n<size=12>A ranged unit that relies on bows and crossbows.\nMain Stat: Dexterity</size>
 gui.character.placeholder.name=Enter name
+## Pause Screen
+gui.pause.button.resume=Resume
+gui.pause.button.quit=Save and Exit
 
 # Player Classes
 player.class.WARRIOR=Warrior
