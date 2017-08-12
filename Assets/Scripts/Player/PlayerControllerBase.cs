@@ -52,8 +52,6 @@ public abstract class PlayerControllerBase : EntityLiving
 
         activeInstance = this;
 
-        maxLife = playerData.GetMaxLife();
-
         FillSpells();
 
         StartCoroutine(DoRegeneration());
@@ -82,6 +80,8 @@ public abstract class PlayerControllerBase : EntityLiving
     protected override void Update()
     {
         base.Update();
+
+        maxLife = playerData.GetMaxLife();
 
         if (playerData.name.StartsWith("#") && Input.GetKeyDown(KeyCode.L))
             playerData.GrantExperience(playerData.ExperienceToNextLevel - playerData.Experience);
@@ -161,16 +161,11 @@ public abstract class PlayerControllerBase : EntityLiving
         while (true)
         {
             yield return new WaitForSeconds(regenSpeed);
-            Heal(playerData.GetMaxLife() * regenPotency);
+            Heal(maxLife * regenPotency);
         }
     }
 
     protected abstract void FillSpells();
-
-    public void Heal(float health)
-    {
-        life = Mathf.Clamp(life + health, 0F, playerData.GetMaxLife());
-    }
 
     public override bool IsTooltipVisible()
     {

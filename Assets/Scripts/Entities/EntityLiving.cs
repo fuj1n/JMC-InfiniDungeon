@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class EntityLiving : Entity
 {
@@ -11,24 +12,29 @@ public abstract class EntityLiving : Entity
 
     protected virtual void Start()
     {
-        life = maxLife;
+        life = 1F;
     }
 
     public override void Damage(Targetable source, float rawDamage)
     {
         base.Damage(source, rawDamage);
 
-        life -= rawDamage;
+        life -= rawDamage / maxLife;
 
         if (life <= 0 && OnKill())
             Destroy(gameObject);
+    }
+
+    public void Heal(float health)
+    {
+        life = Mathf.Clamp(life + health / maxLife, 0F, 1F);
     }
 
     public override void GetTooltip(List<string> tooltip)
     {
         base.GetTooltip(tooltip);
 
-        tooltip.Add(FormatCodes.RED + FormatCodes.ITALIC + "entity.label.health: " + life + FormatCodes.ITALIC_E + FormatCodes.COL_E);
+        tooltip.Add(FormatCodes.RED + FormatCodes.ITALIC + "entity.label.health: " + (int)(life * maxLife) + FormatCodes.ITALIC_E + FormatCodes.COL_E);
 
         if (TargetTracker.target == this)
             tooltip.Add(FormatCodes.GOLD + "entity.label.selected" + FormatCodes.COL_E);

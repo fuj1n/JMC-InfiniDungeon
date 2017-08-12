@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using UnityEngine;
 
 public class StatInterfaceButtons : MonoBehaviour {
     public void StatUp(string stat)

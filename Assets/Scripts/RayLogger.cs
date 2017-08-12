@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System.Linq;
-using System.Collections;
+﻿using System.Linq;
+using UnityEngine;
 
 public class RayLogger : MonoBehaviour
 {

@@ -41,8 +41,8 @@ public class PlayerInfo : MonoBehaviour
 
         playerName.text = data.name;
 
-        playerHP.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, playerHPBackground.rect.width * (controller.life / data.GetMaxLife()));
-        playerHPVal.text = (int)controller.life + " / " + (int)data.GetMaxLife();
+        playerHP.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, playerHPBackground.rect.width * controller.life);
+        playerHPVal.text = (int)(controller.life * controller.maxLife) + " / " + (int)controller.maxLife;
 
         playerXP.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, playerXPBackground.rect.width * ((float)data.Experience / data.ExperienceToNextLevel));
         playerXPVal.text = data.Experience + " / " + data.ExperienceToNextLevel;

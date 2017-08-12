@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class TargetInfo : MonoBehaviour {
+public class TargetInfo : MonoBehaviour
+{
     private static I18n i18n = I18n.Get();
 
     private Text targetName;
@@ -34,7 +35,7 @@ public class TargetInfo : MonoBehaviour {
             return;
 
         targetName.text = i18n.Translate(TargetTracker.target.GetName());
-        targetHP.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, targetHPBackground.rect.width * (TargetTracker.target.life / TargetTracker.target.maxLife));
-        targetHPVal.text = (int)TargetTracker.target.life + " / " + (int)TargetTracker.target.maxLife;
+        targetHP.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, targetHPBackground.rect.width * TargetTracker.target.life);
+        targetHPVal.text = (int)(TargetTracker.target.life * TargetTracker.target.maxLife) + " / " + (int)TargetTracker.target.maxLife;
     }
 }
