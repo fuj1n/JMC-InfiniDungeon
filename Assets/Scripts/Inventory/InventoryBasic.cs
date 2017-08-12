@@ -9,12 +9,12 @@
         inventory = new ItemStack[size];
     }
 
-    public int GetSize()
+    public virtual int GetSize()
     {
         return inventory.Length;
     }
 
-    public ItemStack GetStackInSlot(int slot)
+    public virtual ItemStack GetStackInSlot(int slot)
     {
         if (!TestBounds(slot))
             return null;
@@ -27,7 +27,7 @@
         return i;
     }
 
-    public bool CanTakeStack(int slot)
+    public virtual bool CanTakeStack(int slot)
     {
         if (!TestBounds(slot))
             return false;
@@ -35,7 +35,15 @@
         return inventory[slot] != null;
     }
 
-    public ItemStack TakeStack(int slot)
+    public virtual bool CanPlaceStack(ItemStack i, int slot)
+    {
+        if (!TestBounds(slot))
+            return false;
+
+        return true;
+    }
+
+    public virtual ItemStack TakeStack(int slot)
     {
         if (!TestBounds(slot))
             return null;
@@ -52,7 +60,7 @@
         return i;
     }
 
-    public void SetStack(ItemStack i, int slot)
+    public virtual void SetStack(ItemStack i, int slot)
     {
         if (!TestBounds(slot))
             return;
@@ -60,7 +68,7 @@
         inventory[slot] = i;
     }
 
-    public bool PlaceStack(ItemStack i)
+    public virtual bool PlaceStack(ItemStack i)
     {
         for (int slot = 0; slot < GetSize(); slot++)
             if (PlaceStack(i, slot))
@@ -69,9 +77,12 @@
         return false;
     }
 
-    public bool PlaceStack(ItemStack i, int slot)
+    public virtual bool PlaceStack(ItemStack i, int slot)
     {
         if (!TestBounds(slot) || i == null)
+            return false;
+
+        if (!CanPlaceStack(i, slot))
             return false;
 
         if (inventory[slot] == null)
@@ -89,12 +100,12 @@
         return false;
     }
 
-    public bool TestBounds(int slot)
+    public virtual bool TestBounds(int slot)
     {
         return slot >= 0 && slot < GetSize();
     }
 
-    public string GetName()
+    public virtual string GetName()
     {
         return name;
     }

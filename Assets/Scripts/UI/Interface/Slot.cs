@@ -39,8 +39,12 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         if (isDummy)
             return;
 
+
         ItemStack invStack = GetSlotContents();
         ItemStack cursorStack = cursorSlot.GetSlotContents();
+
+        if (!inv.CanTakeStack(slot) || (cursorStack != null && !inv.CanPlaceStack(cursorStack, slot)))
+            return;
 
         cursorSlot.SetSlotContents(invStack);
         SetSlotContents(cursorStack);
@@ -76,9 +80,12 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     {
         isDirty = true;
 
-        if (stack == null)
+        if (stack == null && inv.CanTakeStack(slot))
             return inv.TakeStack(slot) != null;
-        return inv.PlaceStack(stack, slot);
+        else if (inv.CanPlaceStack(stack, slot))
+            return inv.PlaceStack(stack, slot);
+
+        return false;
     }
 
     public ItemStack GetSlotContents()

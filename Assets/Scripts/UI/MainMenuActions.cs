@@ -31,6 +31,8 @@ public class MainMenuActions : MonoBehaviour
             UIHelper.Alert("alerts.character.notype");
         else if (string.IsNullOrEmpty(name))
             UIHelper.Alert("alerts.character.noname");
+        else if (name.StartsWith("#ns"))
+            UIHelper.Alert("alerts.character.nodebug");
         else
         {
             PlayerData.PlayerClass cls = (PlayerData.PlayerClass)Enum.Parse(typeof(PlayerData.PlayerClass), selectedClass.data);

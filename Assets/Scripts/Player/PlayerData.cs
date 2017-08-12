@@ -27,6 +27,8 @@ public class PlayerData
 
     [JsonIgnore]
     public IInventory inventory = new InventoryBasic("inventory.player", 60);
+    [JsonIgnore]
+    public IInventory armor = new InventoryArmor();
 
     public readonly PlayerClass playerClass;
     public Stats rawStats;
@@ -81,6 +83,8 @@ public class PlayerData
 
     [JsonProperty]
     private Dictionary<int, string> slotsData;
+    [JsonProperty]
+    private Dictionary<int, string> armorData;
 
     public struct Stats
     {
@@ -170,7 +174,14 @@ public class PlayerData
 
     public Stats CalculateStats()
     {
-        return rawStats + baseStats[playerClass]; // TODO stats based on inv
+        Stats armorStats = default(Stats);
+
+        for (int i = 0; i < armor.GetSize(); i++)
+            if (armor.GetStackInSlot(i) != null && armor.GetStackInSlot(i).item is ItemEquippable)
+                armorStats += ((ItemEquippable)armor.GetStackInSlot(i).item).GetStatChanges(armor.GetStackInSlot(i));
+
+
+        return rawStats + baseStats[playerClass] + armorStats;
     }
 
     public float GetDamageMultiplierForStat(Stats.Stat stat)
@@ -207,7 +218,7 @@ public class PlayerData
 
     public void SaveData()
     {
-        if (name.StartsWith("#"))
+        if (name.StartsWith("#ns"))
             return;
 
         if (!Directory.Exists(DATA_LOCATION))
@@ -218,6 +229,12 @@ public class PlayerData
         for (int i = 0; i < inventory.GetSize(); i++)
             if (inventory.GetStackInSlot(i) != null)
                 slotsData[i] = inventory.GetStackInSlot(i).ToJSON();
+
+        armorData = new Dictionary<int, string>();
+
+        for (int i = 0; i < armor.GetSize(); i++)
+            if (armor.GetStackInSlot(i) != null)
+                armorData[i] = armor.GetStackInSlot(i).ToJSON();
 
         File.WriteAllText(DATA_LOCATION + snowflake + ".json", JsonConvert.SerializeObject(this, Formatting.Indented));
 

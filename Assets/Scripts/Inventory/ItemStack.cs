@@ -16,6 +16,8 @@ public sealed class ItemStack
 
         this.item = item;
         this.amount = amount;
+
+        item.OnItemStackConstructed(this);
     }
 
     public int GetMaxStackSize()

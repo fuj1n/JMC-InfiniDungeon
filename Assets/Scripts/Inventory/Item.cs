@@ -67,4 +67,6 @@ public class Item
     {
         return icon;
     }
+
+    public virtual void OnItemStackConstructed(ItemStack stack) {}
 }

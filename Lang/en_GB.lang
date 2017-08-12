@@ -20,6 +20,7 @@ dungeon.generator.wait=Waiting 4 seconds
 alerts.character.notype=Please select a character type
 alerts.character.noname=Please enter a character name
 alerts.character.nosel=Please select a character
+alerts.character.nodebug=Character name cannot start with #ns
 ## Spells
 alerts.player.spell.lowlevel=You do not meet the level requirement for this spell
 alerts.player.spell.notarget=You need a target to cast this spell
