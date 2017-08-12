@@ -72,6 +72,10 @@ entity.label.selected=Selected
 entity.slime.name=Slime
 
 # Interface
+## Player
+interface.player.stats=Stats
+interface.player.calcStats=Total Stats
+interface.player.availableStats=Remaining Stat Points:
 ## Inventory
 interface.inventory.armor=Armor
 interface.inventory.player=Inventory

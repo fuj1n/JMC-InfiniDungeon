@@ -179,17 +179,7 @@ public class PlayerData
 
         float mult = .25F;
 
-        switch (stat)
-        {
-            case Stats.Stat.DEXTERITY:
-                return 1 + s.dexterity * mult;
-            case Stats.Stat.INTELLIGENCE:
-                return 1 + s.intelligence * mult;
-            case Stats.Stat.STRENGTH:
-                return 1 + s.strength * mult;
-        }
-
-        return 1F;
+        return 1 + s.GetStat(stat) * mult;
     }
 
     public float GetMaxLife()
