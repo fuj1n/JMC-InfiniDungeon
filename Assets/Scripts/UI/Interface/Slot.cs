@@ -136,6 +136,8 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         count.transform.SetParent(numberBackground.transform, false);
         count.raycastTarget = false;
 
+        RefreshSlot();
+
         if (isDummy)
             return;
 

@@ -89,7 +89,7 @@ public class InterfaceController : MonoBehaviour
         if (face)
         {
             face.Close();
-            Destroy(face);
+            Destroy(face.gameObject);
         }
 
         outFace = null;
