@@ -29,7 +29,7 @@ public class CameraZoom : MonoBehaviour
         if (Physics.Raycast(new Ray(transform.parent.TransformPoint(new Vector3(lp.x, lp.y, 0)), -transform.parent.forward), out hit, Mathf.Abs(allowedZoom)))
             allowedZoom = minZoom < 0 ? -hit.distance + .2F : hit.distance + .2F;
 
-        if ((minZoom < 0 && lp.z < allowedZoom) || (minZoom >= 0 && lp.z > allowedZoom))
+        if ((minZoom < 0 && lp.z < allowedZoom && currentZoom < allowedZoom) || (minZoom >= 0 && lp.z > allowedZoom && currentZoom > allowedZoom))
             transform.localPosition = new Vector3(lp.x, lp.y, allowedZoom);
         else
             transform.localPosition = Vector3.Lerp(lp, new Vector3(lp.x, lp.y, allowedZoom), Time.deltaTime * speed);
