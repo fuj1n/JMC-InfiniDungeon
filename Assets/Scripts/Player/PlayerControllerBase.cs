@@ -179,7 +179,9 @@ public abstract class PlayerControllerBase : EntityLiving
 
     public override bool OnKill()
     {
-        SceneManager.LoadScene("Scenes/MainMenu"); // TODO death screen
+        PlayerData.Instance.SaveData();
+
+        SceneManager.LoadScene("Scenes/MainMenu"); // TODO death screen?
 
         return true;
     }

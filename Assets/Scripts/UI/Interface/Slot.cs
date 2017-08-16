@@ -43,7 +43,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         ItemStack invStack = GetSlotContents();
         ItemStack cursorStack = cursorSlot.GetSlotContents();
 
-        if (!inv.CanTakeStack(slot) || (cursorStack != null && !inv.CanPlaceStack(cursorStack, slot)))
+        if ((GetSlotContents() != null && !inv.CanTakeStack(slot)) || (cursorStack != null && !inv.CanPlaceStack(cursorStack, slot)))
             return;
 
         cursorSlot.SetSlotContents(invStack);
@@ -121,7 +121,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         foreground.raycastTarget = false;
 
         GameObject numberBackground = new GameObject("numberBackground");
-        numberBackground.transform.SetParent(fg, false);
+        numberBackground.AddComponent<RectTransform>().SetParent(fg, false);
 
         Image numberBg = numberBackground.AddComponent<Image>();
         numberBg.color = new Color(0F, 0F, 0F, .75F);
@@ -132,13 +132,13 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         bgRect.anchorMin = new Vector2(0F, 0F);
         bgRect.anchorMax = bgRect.anchorMin;
         bgRect.pivot = new Vector2(0F, 0F);
-        bgRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 30F);
+        bgRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 24F);
         bgRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, SLOT_SIZE);
 
         GameObject num = new GameObject("number");
         count = num.AddComponent<Text>();
         count.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        count.fontSize = 36;
+        count.fontSize = 24;
         count.alignment = TextAnchor.MiddleCenter;
         count.transform.SetParent(numberBackground.transform, false);
         count.raycastTarget = false;

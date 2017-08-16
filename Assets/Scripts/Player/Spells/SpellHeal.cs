@@ -22,7 +22,7 @@
     {
         if (!base.VerifyCanCastSpell(controller, hypothetical))
             return false;
-        if (controller.life >= controller.playerData.GetMaxLife())
+        if (controller.life >= 1F)
         {
             if (!hypothetical)
                 UIHelper.Alert("alerts.player.spell.maxhealth", "InGameError");
