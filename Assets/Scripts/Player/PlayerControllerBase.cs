@@ -21,6 +21,11 @@ public abstract class PlayerControllerBase : EntityLiving
     private float regenSpeed = 1.3F;
     private float regenPotency = 0.05F;
 
+    private List<EntityLiving> enemyTabCache;
+
+    private float farthestSpell = 0F;
+    private Func<GameObject, bool> reasonableTargetFunc;
+
     public float Progress
     {
         get
@@ -47,12 +52,19 @@ public abstract class PlayerControllerBase : EntityLiving
     {
         faction = TargetableFaction.PLAYER;
 
+        reasonableTargetFunc = e => Vector3.Distance(e.transform.position, transform.position) < farthestSpell && Vector3.Angle(e.transform.position - transform.position, transform.forward) <= 90;
+
         if (playerData == null)
             return;
 
         activeInstance = this;
 
         FillSpells();
+        spells.ForEach(b =>
+        {
+            if (b.range > farthestSpell)
+                farthestSpell = b.range;
+        });
 
         StartCoroutine(DoRegeneration());
     }
@@ -85,6 +97,19 @@ public abstract class PlayerControllerBase : EntityLiving
 
         if (playerData.name.StartsWith("#") && Input.GetKeyDown(KeyCode.L))
             playerData.GrantExperience(playerData.ExperienceToNextLevel - playerData.Experience);
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (!TryAndSwitchTarget())
+            {
+                enemyTabCache = (from e in GameObject.FindGameObjectsWithTag("Enemy")
+                                 where reasonableTargetFunc(e) && e.GetComponent<EntityLiving>()
+                                 orderby Vector3.Distance(e.transform.position, transform.position) ascending
+                                 select e.GetComponent<EntityLiving>()).ToList();
+
+                TryAndSwitchTarget();
+            }
+        }
 
         SpellBase[] keys = cooldowns.Keys.ToArray();
 
@@ -199,5 +224,25 @@ public abstract class PlayerControllerBase : EntityLiving
     public float GetCooldown(SpellBase spell)
     {
         return IsInCooldown(spell) ? cooldowns[spell] : -1F;
+    }
+
+    private bool TryAndSwitchTarget()
+    {
+        while (enemyTabCache != null && enemyTabCache.Count > 0)
+        {
+            bool madeSwitch = false;
+            if (reasonableTargetFunc(enemyTabCache[0].gameObject))
+            {
+                TargetTracker.target = enemyTabCache[0];
+                madeSwitch = true;
+            }
+
+            enemyTabCache.RemoveAt(0);
+
+            if (madeSwitch)
+                return true;
+        }
+
+        return false;
     }
 }
