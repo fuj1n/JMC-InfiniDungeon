@@ -20,7 +20,7 @@ public class DistanceFader : MonoBehaviour
     private void Awake()
     {
         mat = GetComponent<Renderer>().material;
-        mat.SetInt("_ZWrite", 1);
+        mat.SetInt("_ZWrite", 1); // Enables depth filtering, fixes weird ordering effects of FADE shading mode
     }
 
     void Update()

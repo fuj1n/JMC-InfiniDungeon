@@ -514,11 +514,6 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    private void VerifyPath(DungeonRoom[,,] dungeon)
-    {
-
-    }
-
     private void SetStatus(string s)
     {
         if (!isDedicated)
