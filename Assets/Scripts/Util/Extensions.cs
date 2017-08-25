@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public static class Extensions
@@ -32,5 +31,19 @@ public static class Extensions
         float screenAspect = Screen.width / (float)Screen.height;
         float cameraHeight = camera.orthographicSize * 2;
         return new Bounds(camera.transform.position, new Vector3(cameraHeight * screenAspect, cameraHeight, 0));
+    }
+
+    public static Transform FindRecursively(this Transform parent, string name)
+    {
+        var result = parent.Find(name);
+        if (result != null)
+            return result;
+        foreach (Transform child in parent)
+        {
+            result = child.FindRecursively(name);
+            if (result != null)
+                return result;
+        }
+        return null;
     }
 }

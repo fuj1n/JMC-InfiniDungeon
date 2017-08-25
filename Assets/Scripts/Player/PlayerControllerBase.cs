@@ -18,8 +18,8 @@ public abstract class PlayerControllerBase : EntityLiving
     private SpellBase casting;
     private float progress;
 
-    private float regenSpeed = 1.3F;
-    private float regenPotency = 0.05F;
+    private float regenSpeed = 2F;
+    private float regenPotency = 0.015F;
 
     private List<EntityLiving> enemyTabCache;
 
@@ -27,6 +27,8 @@ public abstract class PlayerControllerBase : EntityLiving
     private Func<GameObject, bool> reasonableTargetFunc;
 
     private Animator anim;
+
+    private Transform castingParticle;
 
     public float Progress
     {
@@ -71,6 +73,8 @@ public abstract class PlayerControllerBase : EntityLiving
         });
 
         StartCoroutine(DoRegeneration());
+
+        castingParticle = transform.FindRecursively("CastingParticle");
     }
 
     protected override void Start()
@@ -136,6 +140,11 @@ public abstract class PlayerControllerBase : EntityLiving
                 }
 
                 anim.CrossFade("None", .5F, anim.GetLayerIndex("Hands"));
+
+                if (castingParticle)
+                    foreach (Transform t in castingParticle)
+                        Destroy(t.gameObject);
+
                 casting = null;
             }
             else
@@ -161,6 +170,9 @@ public abstract class PlayerControllerBase : EntityLiving
 
                 if (!string.IsNullOrEmpty(casting.animation))
                     anim.CrossFade(casting.animation, .5F, anim.GetLayerIndex("Hands"));
+
+                if (castingParticle && !string.IsNullOrEmpty(casting.particle))
+                    Instantiate(Resources.Load<GameObject>("Particles/" + casting.particle), castingParticle);
 
                 return;
             }
@@ -218,7 +230,7 @@ public abstract class PlayerControllerBase : EntityLiving
 
         SceneManager.LoadScene("Scenes/MainMenu"); // TODO death screen?
 
-        return true;
+        return false;
     }
 
     public static PlayerControllerBase GetActiveInstance()

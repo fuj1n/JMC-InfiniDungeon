@@ -19,7 +19,7 @@ public abstract class EntityLiving : Entity
     {
         base.Damage(source, rawDamage);
 
-        life -= rawDamage / maxLife;
+        life = Mathf.Clamp01(life - rawDamage / maxLife);
 
         if (life <= 0 && OnKill())
             Destroy(gameObject);
@@ -27,7 +27,7 @@ public abstract class EntityLiving : Entity
 
     public void Heal(float health)
     {
-        life = Mathf.Clamp(life + health / maxLife, 0F, 1F);
+        life = Mathf.Clamp01(life + health / maxLife);
     }
 
     public override void GetTooltip(List<string> tooltip)

@@ -11,6 +11,7 @@ public abstract class SpellBase
 
     public string animation;
     public string icon;
+    public string particle;
 
     public SpellBase(int levelRequirement, float castTime, float cooldown, bool requiresLineOfSight = true, TargetType spellTarget = TargetType.SELECTED, float range = 25F)
     {
@@ -70,6 +71,13 @@ public abstract class SpellBase
     public SpellBase SetAnimation(string animation)
     {
         this.animation = animation;
+
+        return this;
+    }
+
+    public SpellBase SetParticle(string particle)
+    {
+        this.particle = particle;
 
         return this;
     }
