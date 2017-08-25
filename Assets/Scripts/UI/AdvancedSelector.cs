@@ -20,6 +20,11 @@ public class AdvancedSelector : UIBehaviour, IPointerClickHandler, IEventSystemH
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        Select();
+    }
+
+    public void Select()
+    {
         if (isSelected)
             return;
 

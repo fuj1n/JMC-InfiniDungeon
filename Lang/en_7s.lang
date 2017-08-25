@@ -1,0 +1,89 @@
+$fuj1n.jmc.infinidungeon.lang
+$English of the Seven Seas (Pirate Speak)
+
+# This shows just how bad I am at pirate speak :/
+
+# Generator Strings
+dungeon.generator.planning=Planning the Voyage
+dungeon.generator.shuffling=Cleanin' the ship
+dungeon.generator.positioning=Assembling the crew
+dungeon.generator.connecting=Raisin' flag
+dungeon.generator.building=Constructin' Jolly Boat
+dungeon.generator.loot=Burying Treasure
+dungeon.generator.spawning.player=Climbing the brig
+dungeon.generator.spawning.teleporters=Meetin' Fatte
+dungeon.generator.spawning.enemies=Fightin' Jolly Roger
+dungeon.generator.spawning.treasure=Searchin' for Booty
+dungeon.generator.spawning.exit=Settin' Sail
+dungeon.generator.wait=Waiting 4 seconds
+
+# Alerts
+## Character Menu
+alerts.character.notype=Ye' must choose yer' designation
+alerts.character.noname=Ye' must name yer'self
+alerts.character.nosel=Ye' must select a sailor
+alerts.character.nodebug=Yer' sailor's name can't begin with #ns
+## Spells
+alerts.player.spell.lowlevel=Yer too weak
+alerts.player.spell.notarget=Yer swingin' at the air
+alerts.player.spell.notfacing=Keep yer' eyes on the target
+alerts.player.spell.cooldown=Yer' too tired
+alerts.player.spell.outofrange=Ye' need to be closer
+alerts.player.spell.maxhealth=Yer healthy enough
+## Player Events
+alerts.player.levelup=Yer stronger now, yer
+
+# User Interface
+## General
+gui.button.back=Ger' back
+gui.button.cancel=Avast
+gui.button.delete=Destroy
+gui.button.start=All hands hoay!
+## Main Menu
+gui.menu.button.play=Lonely Voyage
+gui.menu.button.options=Choose your Lingo!
+gui.menu.button.quit=Abandon Ship!
+## Options Screen
+gui.title.options=Choose your Lingo!
+## Character Screen
+gui.character.button.new=New Sailor
+gui.character.button.create=Create
+gui.character.text.mage=Witch\n<size=12>A ranged unit that relies on magical attacks.\nMain Stat: Intelligence</size>
+gui.character.text.warrior=Sailor\n<size=12>A melee unit that relies on his trusty sword.\nMain Stat: Strength</size>
+gui.character.text.scoundrel=Gunman\n<size=12>A ranged unit that relies on bows and crossbows.\nMain Stat: Dexterity</size>
+gui.character.placeholder.name=Enter yer' title
+## Pause Screen
+gui.pause.button.resume=Raise the anchors!
+gui.pause.button.quit=Abandon Ship!
+
+# Player Classes
+player.class.WARRIOR=Sailor
+player.class.MAGE=Witch
+player.class.SCOUNDREL=Gunman
+
+# Player Stats
+player.stats.str.name=Hitting Power
+player.stats.dex.name=Speed
+player.stats.vit.name=Health
+player.stats.int.name=Smarties
+
+player.stats.str.desc=How hard your melee hits are
+player.stats.dex.desc=Your mobility in battle, improves your dodge chance and attack speed
+player.stats.vit.desc=How many hit points you can take before you die
+player.stats.int.desc=The magnitude of your magical attacks for mages\nYour resistance to damage from all sources
+
+player.stats.primary=Primary stat for: %s
+
+# Entities
+entity.label.health=Health
+entity.label.selected=Selected
+entity.slime.name=Barnacles
+
+# Interface
+## Player
+interface.player.stats=Stats
+interface.player.calcStats=Total Stats
+interface.player.availableStats=Remaining Stat Points:
+## Inventory
+interface.inventory.armor=Armor
+interface.inventory.player=Booty Chest

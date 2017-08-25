@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public class I18n
 {
+    public const string FILE = "Data/SelectedLanguage";
+
     private static I18n instance;
 
     public Dictionary<string, Language> languages = new Dictionary<string, Language>();
@@ -76,11 +79,31 @@ public class I18n
 
             sr.Close();
         }
+
+        LoadState();
     }
 
     public void Register(Language lang)
     {
         languages[lang.id] = lang;
+    }
+
+    public void SaveState()
+    {
+        if (!File.Exists(FILE))
+            File.Create(FILE);
+        File.WriteAllText(FILE, currentLanguage.id);
+    }
+
+    public void LoadState()
+    {
+        if (!File.Exists(FILE))
+            return;
+
+        string lang = File.ReadAllText(FILE).Trim();
+
+        if (languages.ContainsKey(lang))
+            currentLanguage = languages[lang];
     }
 
     public class Language
@@ -91,6 +114,16 @@ public class I18n
         public Dictionary<string, string> data;
 
         public string src;
+
+        public void Free()
+        {
+            if (data != null)
+            {
+                data.Clear();
+                data = null;
+                GC.Collect();
+            }
+        }
 
         public void Load()
         {

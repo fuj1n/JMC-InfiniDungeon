@@ -60,6 +60,7 @@ public class MainMenuActions : MonoBehaviour
         else
         {
             PlayerData pd = FindCharacter(selected.data);
+            pd.accessTime = DateTime.Now;
 
             PlayerData.Instance = pd;
 

@@ -8,7 +8,6 @@ using UnityEngine;
 public class PlayerData
 {
     public const string DATA_LOCATION = "Data/Players/";
-
     public const int BASE_XP = 32;
 
     public static PlayerData Instance { get; set; }
@@ -24,6 +23,7 @@ public class PlayerData
         }
     }
     private string snowflake = Guid.NewGuid().ToString("N");
+    public DateTime accessTime = DateTime.Now;
 
     [JsonIgnore]
     public IInventory inventory = new InventoryBasic("inventory.player", 60);
@@ -278,6 +278,6 @@ public class PlayerData
                 pd.Add(data);
         }
 
-        return pd.OrderBy(d => d.name).ToArray();
+        return pd.OrderBy(d => d.accessTime).ThenBy(d => d.name).ToArray();
     }
 }

@@ -39,8 +39,10 @@ gui.button.delete=Delete
 gui.button.start=Start Game
 ## Main Menu
 gui.menu.button.play=Single Player
-gui.menu.button.options=Options
+gui.menu.button.options=Language Select
 gui.menu.button.quit=Quit to Desktop
+## Options Screen
+gui.title.options=Language Select
 ## Character Screen
 gui.character.button.new=New Character
 gui.character.button.create=Create
