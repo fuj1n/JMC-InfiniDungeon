@@ -9,6 +9,7 @@ public abstract class SpellBase
     public readonly TargetType spellTarget;
     public readonly float range;
 
+    public string animation;
     public string icon;
 
     public SpellBase(int levelRequirement, float castTime, float cooldown, bool requiresLineOfSight = true, TargetType spellTarget = TargetType.SELECTED, float range = 25F)
@@ -62,6 +63,13 @@ public abstract class SpellBase
     public SpellBase SetIcon(string icon)
     {
         this.icon = icon;
+
+        return this;
+    }
+
+    public SpellBase SetAnimation(string animation)
+    {
+        this.animation = animation;
 
         return this;
     }

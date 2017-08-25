@@ -5,6 +5,8 @@ public class TargetInfo : MonoBehaviour
 {
     private static I18n i18n = I18n.Get();
 
+    public float updateSpeed = 2F;
+
     private Text targetName;
 
     private RectTransform targetHP;
@@ -13,6 +15,9 @@ public class TargetInfo : MonoBehaviour
 
     private Image backgroundImage;
     private Color bgCol;
+
+    private float hpValue;
+    private EntityLiving targetOld;
 
     private static readonly Color invisible = new Color(0F, 0F, 0F, 0F);
 
@@ -32,10 +37,21 @@ public class TargetInfo : MonoBehaviour
         backgroundImage.color = TargetTracker.target ? bgCol : invisible;
 
         if (!TargetTracker.target)
+        {
+            targetOld = null;
             return;
+        }
+
+        if (targetOld != TargetTracker.target)
+        {
+            targetOld = TargetTracker.target;
+            hpValue = TargetTracker.target.life;
+        }
+
+        hpValue = Mathf.Lerp(hpValue, TargetTracker.target.life, Time.deltaTime * updateSpeed);
 
         targetName.text = i18n.Translate(TargetTracker.target.GetName());
-        targetHP.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, targetHPBackground.rect.width * TargetTracker.target.life);
+        targetHP.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, targetHPBackground.rect.width * hpValue);
         targetHPVal.text = (int)(TargetTracker.target.life * TargetTracker.target.maxLife) + " / " + (int)TargetTracker.target.maxLife;
     }
 }

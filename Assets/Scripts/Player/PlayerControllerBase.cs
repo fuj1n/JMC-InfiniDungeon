@@ -26,6 +26,8 @@ public abstract class PlayerControllerBase : EntityLiving
     private float farthestSpell = 0F;
     private Func<GameObject, bool> reasonableTargetFunc;
 
+    private Animator anim;
+
     public float Progress
     {
         get
@@ -50,6 +52,8 @@ public abstract class PlayerControllerBase : EntityLiving
 
     protected virtual void Awake()
     {
+        anim = transform.GetComponent<Animator>();
+
         faction = TargetableFaction.PLAYER;
 
         reasonableTargetFunc = e => Vector3.Distance(e.transform.position, transform.position) < farthestSpell && Vector3.Angle(e.transform.position - transform.position, transform.forward) <= 90;
@@ -130,6 +134,8 @@ public abstract class PlayerControllerBase : EntityLiving
                     cooldowns[casting] = casting.cooldown;
                     casting.Cast(this);
                 }
+
+                anim.CrossFade("None", .5F, anim.GetLayerIndex("Hands"));
                 casting = null;
             }
             else
@@ -152,6 +158,10 @@ public abstract class PlayerControllerBase : EntityLiving
                     continue;
                 progress = 0;
                 casting = spells[i];
+
+                if (!string.IsNullOrEmpty(casting.animation))
+                    anim.CrossFade(casting.animation, .5F, anim.GetLayerIndex("Hands"));
+
                 return;
             }
         }

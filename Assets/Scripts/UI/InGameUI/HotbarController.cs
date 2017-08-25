@@ -3,13 +3,18 @@ using UnityEngine.UI;
 
 public class HotbarController : MonoBehaviour
 {
+    public static readonly Vector2 BOX_SIZE = new Vector2(100, 100);
+
     public static readonly Color UNAVAILABLE = new Color(1F, 0F, 0F);
     public static readonly Color UNUSABLE = new Color(.20F, .20F, .20F);
     public static readonly Color AVAILABLE = new Color(1F, 1F, 1F);
 
     public static readonly Color COOLDOWN_VALUE = new Color(1F, 1F, 0F);
 
+    public float animationSpeed = 2F;
+
     private Image[] renderers;
+    private RectTransform[] cooldownOverlays;
     private Text[] cooldowns;
 
     private void Start()
@@ -18,6 +23,7 @@ public class HotbarController : MonoBehaviour
 
         SpellBase[] spells = controller.Spells;
         renderers = new Image[spells.Length];
+        cooldownOverlays = new RectTransform[spells.Length];
         cooldowns = new Text[spells.Length];
 
         for (int i = 0; i < spells.Length; i++)
@@ -32,8 +38,16 @@ public class HotbarController : MonoBehaviour
 
             RectTransform rect = go.GetComponent<RectTransform>();
 
-            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 100F);
-            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 100F);
+            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, BOX_SIZE.x);
+            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, BOX_SIZE.y);
+
+            GameObject spellOverlay = new GameObject("overlay");
+            cooldownOverlays[i] = spellOverlay.AddComponent<RectTransform>();
+            cooldownOverlays[i].SetParent(rect, false);
+
+            cooldownOverlays[i].SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, 0F, 0F);
+
+            spellOverlay.AddComponent<Image>().color = new Color(UNUSABLE.r, UNUSABLE.g, UNUSABLE.b, .5F);
 
             GameObject numberBackground = new GameObject("numberBackground");
             numberBackground.transform.SetParent(rect, false);
@@ -78,12 +92,19 @@ public class HotbarController : MonoBehaviour
         {
             cooldowns[i].text = controller.IsInCooldown(spells[i]) ? controller.GetCooldown(spells[i]).ToString("F1") : "";
 
+            Color col = AVAILABLE;
+
             if (!spells[i].CompareLevelRequirement(controller))
-                renderers[i].color = UNAVAILABLE;
-            else if (controller.IsInCooldown(spells[i]) || !spells[i].VerifyCanCastSpell(controller, true))
-                renderers[i].color = UNUSABLE;
+                col = UNAVAILABLE;
+            else if (!spells[i].VerifyCanCastSpell(controller, true))
+                col = UNUSABLE;
             else
-                renderers[i].color = AVAILABLE;
+                col = AVAILABLE;
+
+            renderers[i].color = Color.Lerp(renderers[i].color, col, Time.deltaTime * animationSpeed);
+
+            if (controller.IsInCooldown(spells[i]))
+                cooldownOverlays[i].SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0F, BOX_SIZE.y * controller.GetCooldown(spells[i]) / spells[i].cooldown);
         }
     }
 }

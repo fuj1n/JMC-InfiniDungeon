@@ -5,6 +5,8 @@ public class PlayerInfo : MonoBehaviour
 {
     private static I18n i18n = I18n.Get();
 
+    public float updateSpeed = 2F;
+
     private Text playerName;
 
     private RectTransform playerHP;
@@ -17,6 +19,9 @@ public class PlayerInfo : MonoBehaviour
 
     private Text playerLevel;
     private Text playerClass;
+
+    private float hpValue;
+    private float xpValue;
 
     private void Awake()
     {
@@ -34,6 +39,14 @@ public class PlayerInfo : MonoBehaviour
         playerClass = transform.Find("PlayerClass").GetComponent<Text>();
     }
 
+    private void Start()
+    {
+        PlayerControllerBase controller = PlayerControllerBase.GetActiveInstance();
+
+        hpValue = controller.life;
+        xpValue = (float)PlayerData.Instance.Experience / PlayerData.Instance.ExperienceToNextLevel;
+    }
+
     private void Update()
     {
         PlayerControllerBase controller = PlayerControllerBase.GetActiveInstance();
@@ -41,10 +54,13 @@ public class PlayerInfo : MonoBehaviour
 
         playerName.text = data.name;
 
-        playerHP.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, playerHPBackground.rect.width * controller.life);
+        hpValue = Mathf.Lerp(hpValue, controller.life, Time.deltaTime * updateSpeed);
+        xpValue = Mathf.Lerp(xpValue, (float)data.Experience / data.ExperienceToNextLevel, Time.deltaTime * updateSpeed);
+
+        playerHP.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, playerHPBackground.rect.width * hpValue);
         playerHPVal.text = (int)(controller.life * controller.maxLife) + " / " + (int)controller.maxLife;
 
-        playerXP.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, playerXPBackground.rect.width * ((float)data.Experience / data.ExperienceToNextLevel));
+        playerXP.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, playerXPBackground.rect.width * xpValue);
         playerXPVal.text = data.Experience + " / " + data.ExperienceToNextLevel;
 
         playerLevel.text = "Level " + data.level;
