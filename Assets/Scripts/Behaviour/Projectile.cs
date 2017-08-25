@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Projectile : MonoBehaviour {
     public Targetable source;
@@ -11,6 +9,14 @@ public class Projectile : MonoBehaviour {
 
     private void Update()
     {
+        if(!target)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        transform.LookAt(target.transform);
+
         Vector3 direction = target.transform.position - transform.position;
         direction.Normalize();
 
@@ -19,7 +25,7 @@ public class Projectile : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject == target.gameObject)
+        if(target && other.gameObject == target.gameObject)
         {
             target.Damage(source, damage);
             Destroy(gameObject);
