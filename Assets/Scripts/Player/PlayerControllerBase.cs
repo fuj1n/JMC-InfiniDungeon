@@ -10,6 +10,9 @@ public abstract class PlayerControllerBase : EntityLiving
     public static readonly string[] keyLabels = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=" };
     public static readonly KeyCode[] spellKeys = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9, KeyCode.Alpha0, KeyCode.Minus, KeyCode.Equals };
 
+    [NonSerialized]
+    public GameObject castEffect;
+
     private static PlayerControllerBase activeInstance;
 
     protected List<SpellBase> spells = new List<SpellBase>();
@@ -139,11 +142,15 @@ public abstract class PlayerControllerBase : EntityLiving
                     casting.Cast(this);
                 }
 
-                anim.CrossFade("None", .5F, anim.GetLayerIndex("Hands"));
+                //anim.CrossFade("None", .5F, anim.GetLayerIndex("Hands"));
 
                 if (castingParticle)
+                {
+                    castEffect = null;
+
                     foreach (Transform t in castingParticle)
                         Destroy(t.gameObject);
+                }
 
                 casting = null;
             }
@@ -168,11 +175,11 @@ public abstract class PlayerControllerBase : EntityLiving
                 progress = 0;
                 casting = spells[i];
 
-                if (!string.IsNullOrEmpty(casting.animation))
-                    anim.CrossFade(casting.animation, .5F, anim.GetLayerIndex("Hands"));
+                //if (!string.IsNullOrEmpty(casting.animation))
+                //    anim.CrossFade(casting.animation, .5F, anim.GetLayerIndex("Hands"));
 
                 if (castingParticle && !string.IsNullOrEmpty(casting.particle))
-                    Instantiate(Resources.Load<GameObject>("Particles/" + casting.particle), castingParticle);
+                    castEffect = Instantiate(Resources.Load<GameObject>("Particles/" + casting.particle), castingParticle);
 
                 return;
             }
