@@ -12,7 +12,9 @@ public class ActionMoveTowardsTarget : AIAction
 
     private float stepTime;
 
-    public ActionMoveTowardsTarget(float distance, Vector3 forwardOffset, Transform target, float speed, float stepTime = 0F)
+    private AudioSource source;
+
+    public ActionMoveTowardsTarget(float distance, Vector3 forwardOffset, Transform target, float speed, float stepTime = 0F, AudioSource source = null)
     {
         this.distance = distance;
         this.forwardOffset = forwardOffset;
@@ -21,6 +23,7 @@ public class ActionMoveTowardsTarget : AIAction
         this.speed = speed;
 
         this.stepTime = stepTime;
+        this.source = source;
     }
 
     public override void OnStart()
@@ -42,6 +45,9 @@ public class ActionMoveTowardsTarget : AIAction
         if (Vector3.Distance(owner.transform.position, target.transform.position) > distance)
         {
             rigidbody.AddForce((owner.transform.forward + forwardOffset) * speed, ForceMode.VelocityChange);
+
+            if (source)
+                source.Play();
 
             if (stepTime > 0F)
                 Sleep(stepTime);

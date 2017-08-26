@@ -4,6 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(AITargetInfo))]
 public class AITargetAttacker : AIComponent
 {
+    public AudioSource audioSource;
+
     public float damage = 25F;
 
     public float range = 0.5F;
@@ -52,7 +54,7 @@ public class AITargetAttacker : AIComponent
 
         if (Vector3.Distance(transform.position, targetInfo.target.transform.position) > range)
         {
-            movingAction = controller.AddAction(new ActionMoveTowardsTarget(range, forwardOffset, targetInfo.target.transform, speed, stepTime));
+            movingAction = controller.AddAction(new ActionMoveTowardsTarget(range, forwardOffset, targetInfo.target.transform, speed, stepTime, audioSource));
         }
         else
         {
