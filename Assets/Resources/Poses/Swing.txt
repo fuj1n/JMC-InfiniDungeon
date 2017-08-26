@@ -1,0 +1,40 @@
+{
+	"frames":{
+		10: {
+			"rightShoulder": {
+				"position": { x: 0.2555251, y: 0.1314132, z: 0 },
+				"rotation": { x: -8, y: -90, z: 150 }
+			},
+			"rightArm": {
+				"position": { x: 0.1933195, y: -0.07500353, z: 0 },
+				"rotation": { x: 0, y: 0, z: 0 }
+			},
+			"rightElbow": {
+				"position": { x: 0.189911, y: 0, z: 0 },
+				"rotation": { x: 0, y: 0, z: 0 }
+			},
+			"rightHand": {
+				"position": { x: 0.3677877, y: 0, z: 0 },
+				"rotation": { x: 0, y: 0, z: 0 }
+			}
+		},
+		20: {
+			"rightShoulder": {
+				"position": { x: 0.2555251, y: 0.1314132, z: 0 },
+				"rotation": { x: -8, y: -90, z: -38 }
+			},
+			"rightArm": {
+				"position": { x: 0.1933195, y: -0.07500353, z: 0 },
+				"rotation": { x: 0, y: 0, z: 0 }
+			},
+			"rightElbow": {
+				"position": { x: 0.189911, y: 0, z: 0 },
+				"rotation": { x: 0, y: 0, z: 0 }
+			},
+			"rightHand": {
+				"position": { x: 0.3677877, y: 0, z: 0 },
+				"rotation": { x: 0, y: 0, z: 0 }
+			}
+		}
+	}
+}

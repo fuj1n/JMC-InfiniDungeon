@@ -10,6 +10,7 @@ public abstract class SpellBase
     public readonly float range;
 
     public string animation;
+    public bool animateBeforeCast = true;
     public string icon;
     public string particle;
 
@@ -68,9 +69,10 @@ public abstract class SpellBase
         return this;
     }
 
-    public SpellBase SetAnimation(string animation)
+    public SpellBase SetAnimation(string animation, bool animateBeforeCast = true)
     {
         this.animation = animation;
+        this.animateBeforeCast = animateBeforeCast;
 
         return this;
     }

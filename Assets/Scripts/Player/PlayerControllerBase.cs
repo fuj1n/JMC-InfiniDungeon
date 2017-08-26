@@ -29,7 +29,7 @@ public abstract class PlayerControllerBase : EntityLiving
     private float farthestSpell = 0F;
     private Func<GameObject, bool> reasonableTargetFunc;
 
-    private Animator anim;
+    private Puppeteer anim;
 
     private Transform castingParticle;
 
@@ -57,7 +57,7 @@ public abstract class PlayerControllerBase : EntityLiving
 
     protected virtual void Awake()
     {
-        anim = transform.GetComponent<Animator>();
+        anim = transform.GetComponent<Puppeteer>();
 
         faction = TargetableFaction.PLAYER;
 
@@ -138,11 +138,16 @@ public abstract class PlayerControllerBase : EntityLiving
             {
                 if (casting.VerifyCanCastSpell(this))
                 {
+                    anim.Pause(false);
+
+                    if (!string.IsNullOrEmpty(casting.animation) && !casting.animateBeforeCast && anim.IsPlaying())
+                        return;
+
                     cooldowns[casting] = casting.cooldown;
                     casting.Cast(this);
                 }
 
-                //anim.CrossFade("None", .5F, anim.GetLayerIndex("Hands"));
+                anim.Stop();
 
                 if (castingParticle)
                 {
@@ -175,8 +180,12 @@ public abstract class PlayerControllerBase : EntityLiving
                 progress = 0;
                 casting = spells[i];
 
-                //if (!string.IsNullOrEmpty(casting.animation))
-                //    anim.CrossFade(casting.animation, .5F, anim.GetLayerIndex("Hands"));
+                if (!string.IsNullOrEmpty(casting.animation))
+                {
+                    anim.Play(Resources.Load<TextAsset>("Poses/" + casting.animation));
+                    if (!casting.animateBeforeCast)
+                        anim.Pause(true);
+                }
 
                 if (castingParticle && !string.IsNullOrEmpty(casting.particle))
                     castEffect = Instantiate(Resources.Load<GameObject>("Particles/" + casting.particle), castingParticle);
@@ -188,6 +197,10 @@ public abstract class PlayerControllerBase : EntityLiving
 
     protected virtual void LateUpdate()
     {
+        // TODO: This works, so make cast animations based off it
+        //if (casting != null)
+        //transform.FindRecursively("hips").Translate(0F, .25F, 0F);
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             InterfaceController ic = InterfaceController.GetInstance();
