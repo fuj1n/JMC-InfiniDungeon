@@ -442,6 +442,15 @@ public class DungeonGenerator : MonoBehaviour
             print(level + ": " + lowerZoner.transform.position);
         }
 
+        SpawnPoint exitSpawn = random.NextFrom(dungeon.transform.Find((levels.Length - 1).ToString()).GetComponentsInChildren<SpawnPoint>());
+        GameObject exitZonerObject = Instantiate(zoners.NextWithReplacement().gameObject, exitSpawn.transform.parent, false);
+        exitZonerObject.transform.position = exitSpawn.transform.position + exitSpawn.offset;
+
+        DungeonZoner exitZoner = exitZonerObject.GetComponent<DungeonZoner>();
+        exitZoner.isZonerExit = true;
+
+        print("EXIT: " + exitZoner.transform.position);
+
         SetStatus("spawning.enemies");
 
         Transform enemiesParent = new GameObject("enemies").transform;
