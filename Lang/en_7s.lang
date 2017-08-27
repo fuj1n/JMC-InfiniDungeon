@@ -48,9 +48,9 @@ gui.title.options=Choose your Lingo!
 ## Character Screen
 gui.character.button.new=New Sailor
 gui.character.button.create=Create
-gui.character.text.mage=Witch\n<size=12>A ranged unit that relies on magical attacks.\nMain Stat: Intelligence</size>
-gui.character.text.warrior=Sailor\n<size=12>A melee unit that relies on his trusty sword.\nMain Stat: Strength</size>
-gui.character.text.scoundrel=Gunman\n<size=12>A ranged unit that relies on bows and crossbows.\nMain Stat: Dexterity</size>
+gui.character.text.mage=Witch\n<size=12>A ranged unit that relies on magical attacks.\nMain Stat: Smarties</size>
+gui.character.text.warrior=Sailor\n<size=12>A melee unit that relies on his trusty sword.\nMain Stat: Hitting Power</size>
+gui.character.text.scoundrel=Gunman\n<size=12>A ranged unit that relies on bows and crossbows.\nMain Stat: Speed</size>
 gui.character.placeholder.name=Enter yer' title
 ## Pause Screen
 gui.pause.button.resume=Raise the anchors!
@@ -78,6 +78,7 @@ player.stats.primary=Primary stat for: %s
 entity.label.health=Health
 entity.label.selected=Selected
 entity.slime.name=Barnacles
+entity.treasure.name=Booty
 
 # Items
 ## Types

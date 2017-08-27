@@ -76,6 +76,7 @@ player.stats.primary=Primary stat for: %s
 entity.label.health=Health
 entity.label.selected=Selected
 entity.slime.name=Slime
+entity.treasure.name=Treasure
 
 # Items
 ## Types

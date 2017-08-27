@@ -43,6 +43,7 @@ public class DungeonGenerator : MonoBehaviour
 
     [Header("Spawns")]
     public int enemyGenPasses = 20;
+    public int treasureGenPasses = 5;
 
     private GameObject genScreen;
     private GenStatusUpdater statusUpdater;
@@ -61,6 +62,7 @@ public class DungeonGenerator : MonoBehaviour
     private IWeightedRandomizer<DungeonTile> doorways;
     private IWeightedRandomizer<DungeonZoner> zoners;
     private IWeightedRandomizer<EntityEnemy> enemies;
+    private IWeightedRandomizer<DungeonTile> components;
     private IWeightedRandomizer<DungeonTile> connectors;
 
     private bool generationComplete = false;
@@ -88,6 +90,7 @@ public class DungeonGenerator : MonoBehaviour
         doorways = new DynamicWeightedRandomizer<DungeonTile>(dungeonSeed);
         zoners = new DynamicWeightedRandomizer<DungeonZoner>(dungeonSeed);
         enemies = new DynamicWeightedRandomizer<EntityEnemy>(dungeonSeed);
+        components = new DynamicWeightedRandomizer<DungeonTile>(dungeonSeed);
         connectors = new DynamicWeightedRandomizer<DungeonTile>(dungeonSeed);
 
         foreach (DungeonTile floor in dungeon.floors)
@@ -102,6 +105,8 @@ public class DungeonGenerator : MonoBehaviour
             zoners[zoner] = zoner.weight;
         foreach (EntityEnemy enemy in dungeon.enemies)
             enemies[enemy] = enemy.weight;
+        foreach (DungeonTile component in dungeon.components)
+            components[component] = component.weight;
         foreach (DungeonTile connector in dungeon.connectors)
             connectors[connector] = connector.weight;
     }
@@ -185,10 +190,10 @@ public class DungeonGenerator : MonoBehaviour
                             room.walls[tx, ty] = walls.NextWithReplacement();
                     }
 
-                foreach (DungeonComponent comp in dungeon.components)
-                {
-                    comp.Place(room);
-                }
+                //foreach (DungeonComponent comp in dungeon.components)
+                //{
+                //    comp.Place(room);
+                //}
             }
         }
 
@@ -442,15 +447,6 @@ public class DungeonGenerator : MonoBehaviour
             print(level + ": " + lowerZoner.transform.position);
         }
 
-        SpawnPoint exitSpawn = random.NextFrom(dungeon.transform.Find((levels.Length - 1).ToString()).GetComponentsInChildren<SpawnPoint>());
-        GameObject exitZonerObject = Instantiate(zoners.NextWithReplacement().gameObject, exitSpawn.transform.parent, false);
-        exitZonerObject.transform.position = exitSpawn.transform.position + exitSpawn.offset;
-
-        DungeonZoner exitZoner = exitZonerObject.GetComponent<DungeonZoner>();
-        exitZoner.isZonerExit = true;
-
-        print("EXIT: " + exitZoner.transform.position);
-
         SetStatus("spawning.enemies");
 
         Transform enemiesParent = new GameObject("enemies").transform;
@@ -476,11 +472,36 @@ public class DungeonGenerator : MonoBehaviour
 
         SetStatus("spawning.treasure");
 
-        //TODO summon treasure
+        Transform treasureParent = new GameObject("treasure").transform;
+        for (int pass = 0; pass < treasureGenPasses; pass++)
+        {
+            SpawnPoint spawn = random.NextFrom(dungeon.transform.GetComponentsInChildren<SpawnPoint>());
+
+            if (!spawn)
+                break;
+
+            DungeonTile component = components.NextWithReplacement();
+
+            GameObject compInst = Instantiate(component.gameObject, treasureParent);
+            compInst.transform.position = spawn.transform.position + spawn.offset;
+
+            compInst.GetComponent<EntityTreasure>().OnSpawn();
+
+            Destroy(spawn);
+        }
 
         SetStatus("spawning.exit");
 
-        //TODO summon exit
+        SpawnPoint exitSpawn = random.NextFrom(dungeon.transform.Find((levels.Length - 1).ToString()).GetComponentsInChildren<SpawnPoint>());
+        GameObject exitZonerObject = Instantiate(zoners.NextWithReplacement().gameObject, exitSpawn.transform.parent, false);
+        exitZonerObject.transform.position = exitSpawn.transform.position + exitSpawn.offset;
+
+        DungeonZoner exitZoner = exitZonerObject.GetComponent<DungeonZoner>();
+        exitZoner.isZonerExit = true;
+
+        Destroy(exitSpawn.gameObject);
+
+        print("EXIT: " + exitZoner.transform.position);
 
         SetStatus("wait");
 

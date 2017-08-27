@@ -23,7 +23,7 @@ public class Dungeon : MonoBehaviour
 
     // Components
     [NonSerialized]
-    public DungeonComponent[] components;
+    public DungeonTile[] components;
 
     // Enemies
     [NonSerialized]
@@ -66,7 +66,7 @@ public class Dungeon : MonoBehaviour
 
         Transform components = transform.Find("components");
         if (components)
-            this.components = components.GetComponentsInChildren<DungeonComponent>();
+            this.components = components.GetComponentsInChildren<DungeonTile>();
 
         Transform enemies = transform.Find("enemies");
         if (enemies)
