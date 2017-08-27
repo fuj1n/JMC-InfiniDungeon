@@ -19,6 +19,29 @@
         return statChanges;
     }
 
+    public override string GetTooltip(ItemStack stack)
+    {
+        string tooltip = base.GetTooltip(stack);
+
+        PlayerData.Stats statChanges = GetStatChanges(stack);
+
+        if (statChanges.Sum() > 0F)
+        {
+            tooltip += "\n\n" + FormatCodes.GOLD + "Stat Changes:" + FormatCodes.COL_E;
+
+            if (statChanges.vitality > 0F)
+                tooltip += "\nplayer.stats.vit.name: " + statChanges.vitality.ToString("F1");
+            if (statChanges.dexterity > 0F)
+                tooltip += "\nplayer.stats.dex.name: " + statChanges.dexterity.ToString("F1");
+            if (statChanges.intelligence > 0F)
+                tooltip += "\nplayer.stats.int.name: " + statChanges.intelligence.ToString("F1");
+            if (statChanges.strength > 0F)
+                tooltip += "\nplayer.stats.str.name: " + statChanges.strength.ToString("F1");
+        }
+
+        return tooltip.Trim();
+    }
+
     public enum SlotType
     {
         HEAD = 0,

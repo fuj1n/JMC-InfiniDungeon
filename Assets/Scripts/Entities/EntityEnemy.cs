@@ -32,4 +32,23 @@ public class EntityEnemy : EntityLiving, IComparable<EntityEnemy>
     {
         return base.IsTooltipVisible() || TargetTracker.target == this;
     }
+
+    public override bool OnKill()
+    {
+        DoDrops();
+
+        return base.OnKill();
+    }
+
+    public virtual void DoDrops()
+    {
+        if (random.NextBool(25))
+        {
+            GameObject itemDrop = new GameObject("itemDrop");
+            itemDrop.transform.position = transform.position;
+
+            EntityItem item = itemDrop.AddComponent<EntityItem>();
+            item.stack = DropGenerator.Generate();
+        }
+    }
 }

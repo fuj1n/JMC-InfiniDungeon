@@ -4,9 +4,15 @@ using UnityEngine.UI;
 
 public class Slot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    private static I18n i18n = I18n.Get();
+
     public const int SLOT_SIZE = 64;
 
     public bool isDummy = false;
+
+    public string label;
+
+    public InterfaceController controller = InterfaceController.GetInstance();
 
     [Header("Slot")]
     [ConditionalHide("isDummy", true, true)]
@@ -29,6 +35,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     private Image foreground;
 
     private Text count;
+    private Text labelText;
 
     private Slot cursorSlot;
 
@@ -48,12 +55,16 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
         cursorSlot.SetSlotContents(invStack);
         SetSlotContents(cursorStack);
+
+        DoTooltip();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (isDummy)
             return;
+
+        DoTooltip();
 
         background.color = hoverColor;
         foreground.color = hoverMultiplier;
@@ -63,6 +74,8 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     {
         if (isDummy)
             return;
+
+        controller.SetTooltip("");
 
         background.color = color;
         foreground.color = multiplier;
@@ -81,21 +94,32 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         isDirty = true;
 
         if (stack == null && inv.CanTakeStack(slot))
-            return inv.TakeStack(slot) != null;
+        {
+            inv.SetStack(null, slot);
+            return true;
+        }
         else if (inv.CanPlaceStack(stack, slot))
-            return inv.PlaceStack(stack, slot);
+        {
+            inv.SetStack(stack, slot);
+            return true;
+        }
 
         return false;
     }
 
     public ItemStack GetSlotContents()
     {
+        if (inv == null)
+            return null;
         return inv.GetStackInSlot(slot);
     }
 
     private void Awake()
     {
-        cursorSlot = InterfaceController.GetInstance().GetCursorSlot();
+        InterfaceController controller = InterfaceController.GetInstance();
+
+        if (controller)
+            cursorSlot = controller.GetCursorSlot();
 
         RectTransform rect = (transform as RectTransform);
 
@@ -105,6 +129,15 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         rect.anchorMax = rect.anchorMin;
 
         rect.sizeDelta = new Vector2(SLOT_SIZE, SLOT_SIZE);
+
+        GameObject lbl = new GameObject("label");
+        lbl.AddComponent<RectTransform>().SetParent(rect, false);
+
+        labelText = lbl.AddComponent<Text>();
+        labelText.fontSize = 14;
+        labelText.alignment = TextAnchor.MiddleCenter;
+        labelText.raycastTarget = false;
+        labelText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
 
         RectTransform fg = new GameObject("item").AddComponent<RectTransform>();
         fg.SetParent(transform, false);
@@ -164,13 +197,26 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     {
         isDirty = false;
 
+
         ItemStack ist = GetSlotContents();
         foreground.gameObject.SetActive(ist != null);
+
+        labelText.gameObject.SetActive(ist == null);
+        labelText.text = i18n.Translate(label);
 
         if (ist == null)
             return;
 
         foreground.sprite = Resources.Load<Sprite>("Icons/" + ist.item.GetIcon(ist));
         count.text = ist.amount.ToString();
+    }
+
+    private void DoTooltip()
+    {
+        ItemStack stack = GetSlotContents();
+        if (stack != null)
+            controller.SetTooltip(TextFormatting.ParseToUnity(i18n.Translate(stack.item.GetTooltip(stack))));
+        else
+            controller.SetTooltip("");
     }
 }

@@ -10,13 +10,15 @@ public abstract class Container
 
     public abstract void InitializeSlots();
 
-    protected void CreateSlot(IInventory inv, int id, int x, int y)
+    protected void CreateSlot(IInventory inv, int id, int x, int y, string label = "")
     {
         GameObject go = new GameObject("slot " + inv.GetName() + " " + id);
         go.AddComponent<RectTransform>().SetParent(slotsParent);
 
         Slot slot = go.AddComponent<Slot>();
+
         slot.SetProperties(inv, id, x, y);
+        slot.label = label;
         slots.Add(slot);
     }
 

@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class DamageScaler : MonoBehaviour {
-
+public class DamageScaler : MonoBehaviour
+{
     private float baseDamage;
     private float baseLife;
     private AITargetAttacker attacker;
@@ -22,7 +20,7 @@ public class DamageScaler : MonoBehaviour {
         if (PlayerData.Instance == null)
             return;
 
-        attacker.damage = baseDamage * (PlayerData.Instance.level * .15F + 1);
-        living.maxLife = baseLife * PlayerData.Instance.level;
+        attacker.damage = baseDamage * (PlayerData.Instance.level * .1F + 1);
+        living.maxLife = baseLife * (PlayerData.Instance.level * .7F + 1);
     }
 }

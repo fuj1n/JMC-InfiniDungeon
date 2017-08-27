@@ -77,6 +77,16 @@ entity.label.health=Health
 entity.label.selected=Selected
 entity.slime.name=Slime
 
+# Items
+## Types
+item.type.HEAD=Helmet
+item.type.CHEST=Chestplate
+item.type.ARMS=Gloves
+item.type.LEGS=Boots
+item.type.NECK=Necklace
+item.type.FINGER=Ring
+item.type.HAND=Weapon
+
 # Interface
 ## Player
 interface.player.stats=Stats

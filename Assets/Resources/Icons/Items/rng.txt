@@ -1,0 +1,41 @@
+{
+	"HEAD": [
+		"helmet_chain",
+		"helmet_plate"
+	],
+	"CHEST": [
+		"chest_chain",
+		"chest_cloth",
+		"chest_leather",
+		"chest_plate"
+	],
+	"ARMS": [
+		"gloves_leather",
+		"gloves_plate"
+	],
+	"LEGS": [
+		"boots_leather",
+		"boots_plate"
+	],
+	"NECK": [
+		"neck_1",
+		"neck_2",
+		"neck_3"
+	],
+	"FINGER": [
+		"finger_1",
+		"finger_2",
+		"finger_3"
+	],
+	"HAND": [
+		"hand/bow_1",
+		"hand/bow_2",
+		"hand/bow_3",
+		"hand/staff_1",
+		"hand/staff_2",
+		"hand/staff_3",
+		"hand/sword_1",
+		"hand/sword_2",
+		"hand/sword_3"
+	]
+}

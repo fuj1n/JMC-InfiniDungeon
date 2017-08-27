@@ -52,6 +52,9 @@ public class PlayerInfo : MonoBehaviour
         PlayerControllerBase controller = PlayerControllerBase.GetActiveInstance();
         PlayerData data = PlayerData.Instance;
 
+        if (data == null)
+            return;
+
         playerName.text = data.name;
 
         hpValue = Mathf.Lerp(hpValue, controller.life, Time.deltaTime * updateSpeed);

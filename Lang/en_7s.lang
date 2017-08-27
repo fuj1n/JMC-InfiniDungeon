@@ -79,6 +79,16 @@ entity.label.health=Health
 entity.label.selected=Selected
 entity.slime.name=Barnacles
 
+# Items
+## Types
+item.type.HEAD=Cap
+item.type.CHEST=Vest
+item.type.ARMS=Handles
+item.type.LEGS=Shoes
+item.type.NECK=Necklace
+item.type.FINGER=Ring
+item.type.HAND=Weapon
+
 # Interface
 ## Player
 interface.player.stats=Stats

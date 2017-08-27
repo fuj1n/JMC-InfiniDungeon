@@ -4,7 +4,7 @@ public class Item
 {
     public static readonly Item[] ITEMS = new Item[256];
 
-    public static readonly Item ITEM_TEST = new Item(0).SetUnlocalizedName("test").SetMaxStackSize(32).SetIcon("Weapon_01");
+    public static readonly Item CUSTOM_EQUIPPABLE = new ItemCustomEquippable(0).SetUnlocalizedName("custom");
 
     private string unlocalizedName = "undefined";
     private int maxStackSize = 64;
@@ -56,6 +56,11 @@ public class Item
         return this;
     }
 
+    public virtual string GetTooltip(ItemStack stack)
+    {
+        return "<b>" + stack.item.GetNameString(stack) + "</b>";
+    }
+
     public Item SetIcon(string icon)
     {
         this.icon = icon;
@@ -68,5 +73,5 @@ public class Item
         return icon;
     }
 
-    public virtual void OnItemStackConstructed(ItemStack stack) {}
+    public virtual void OnItemStackConstructed(ItemStack stack) { }
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class InterfaceController : MonoBehaviour
 {
@@ -6,6 +7,9 @@ public class InterfaceController : MonoBehaviour
 
     private Interface leftOpen;
     private Interface rightOpen;
+
+    private GameObject tooltip;
+    private Text tooltipText;
 
     private Slot cursorSlot;
 
@@ -24,6 +28,11 @@ public class InterfaceController : MonoBehaviour
 
         leftInterface = transform.Find("left").GetComponent<RectTransform>();
         rightInterface = transform.Find("right").GetComponent<RectTransform>();
+
+        tooltip = transform.Find("tooltip").gameObject;
+        tooltipText = tooltip.GetComponentInChildren<Text>();
+
+        tooltip.SetActive(false);
 
         cursorSlot = transform.Find("cursorSlot").GetComponent<Slot>();
         cursorSlot.SetProperties(new InventoryBasic("cursor.inventory", 1), 0, 0, 0);
@@ -51,6 +60,13 @@ public class InterfaceController : MonoBehaviour
         UpdateState();
     }
 
+    public void SetTooltip(string tooltip)
+    {
+        tooltipText.text = tooltip;
+
+        this.tooltip.SetActive(!string.IsNullOrEmpty(tooltip));
+    }
+
     private void OpenInterface(Interface i, Interface current, RectTransform side, out Interface output)
     {
         bool closeOnly = (current && current.id == i.id);
@@ -71,6 +87,8 @@ public class InterfaceController : MonoBehaviour
 
     public void CloseInterface(Side side)
     {
+        SetTooltip("");
+
         switch (side)
         {
             case Side.LEFT:

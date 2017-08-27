@@ -12,9 +12,8 @@ public class EntityItem : Entity
         return stack.item.GetNameString(stack);
     }
 
-    private void Awake()
+    private void Start()
     {
-        stack = new ItemStack(Item.ITEM_TEST, 22);
         sprite = Resources.Load<Sprite>("Icons/" + stack.item.GetIcon(stack));
 
         renderer = gameObject.AddComponent<SpriteRenderer>();
@@ -46,6 +45,12 @@ public class EntityItem : Entity
 
     private void PickUp()
     {
-        Destroy(gameObject);
+        PlayerData data = PlayerData.Instance;
+
+        if (data != null)
+        {
+            if (data.inventory.PlaceStack(stack))
+                Destroy(gameObject);
+        }
     }
 }

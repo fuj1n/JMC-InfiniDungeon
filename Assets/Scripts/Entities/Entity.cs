@@ -3,6 +3,7 @@ using UnityEngine;
 
 public abstract class Entity : Targetable
 {
+    protected static readonly System.Random random = new System.Random();
     protected bool doTooltip = true;
 
     private bool mouseOver = false;
