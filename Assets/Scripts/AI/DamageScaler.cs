@@ -11,8 +11,10 @@ public class DamageScaler : MonoBehaviour
     {
         attacker = GetComponent<AITargetAttacker>();
         living = GetComponent<EntityLiving>();
-        baseDamage = attacker.damage;
-        baseLife = living.maxLife;
+        if (baseDamage == 0F)
+            baseDamage = attacker.damage;
+        if (baseLife == 0F)
+            baseLife = living.maxLife;
     }
 
     private void Update()

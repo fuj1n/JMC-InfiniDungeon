@@ -7,6 +7,8 @@
     {
         this.slot = slot;
         this.statChanges = statChanges;
+
+        SetMaxStackSize(1);
     }
 
     public virtual SlotType GetSlotType(ItemStack stack)

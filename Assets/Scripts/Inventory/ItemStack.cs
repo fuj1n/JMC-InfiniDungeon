@@ -27,7 +27,7 @@ public sealed class ItemStack
 
     public bool IsEqual(ItemStack stack)
     {
-        return item == stack.item;
+        return item.IsEqual(this, stack);
     }
 
     public string ToJSON()

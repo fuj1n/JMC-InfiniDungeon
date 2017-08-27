@@ -45,7 +45,8 @@ public class EntityEnemy : EntityLiving, IComparable<EntityEnemy>
         if (random.NextBool(25))
         {
             GameObject itemDrop = new GameObject("itemDrop");
-            itemDrop.transform.position = transform.position;
+            itemDrop.transform.position = transform.position + Vector3.up * .5F;
+            itemDrop.transform.localEulerAngles = new Vector3(0F, random.Next(-90, 90), 0);
 
             EntityItem item = itemDrop.AddComponent<EntityItem>();
             item.stack = DropGenerator.Generate();

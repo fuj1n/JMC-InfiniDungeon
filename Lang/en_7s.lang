@@ -88,6 +88,7 @@ item.type.LEGS=Shoes
 item.type.NECK=Necklace
 item.type.FINGER=Ring
 item.type.HAND=Weapon
+item.type.DROP=Drop
 
 # Interface
 ## Player

@@ -273,7 +273,7 @@ public abstract class PlayerControllerBase : EntityLiving
         while (enemyTabCache != null && enemyTabCache.Count > 0)
         {
             bool madeSwitch = false;
-            if (reasonableTargetFunc(enemyTabCache[0].gameObject))
+            if (enemyTabCache[0] && reasonableTargetFunc(enemyTabCache[0].gameObject))
             {
                 TargetTracker.target = enemyTabCache[0];
                 madeSwitch = true;

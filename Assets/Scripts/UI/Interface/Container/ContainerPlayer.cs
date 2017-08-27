@@ -8,6 +8,8 @@
     {
         IInventory armorInv = PlayerData.Instance.armor;
 
+        CreateSlot(new InventoryDropper(), 0, 712, 482, "item.type.DROP");
+
         CreateSlot(armorInv, 0, 347, 915, "item.type.HEAD"); // Head
         CreateSlot(armorInv, 1, 384, 841, "item.type.CHEST"); // Chest
         CreateSlot(armorInv, 2, 310, 841, "item.type.ARMS"); // Arms

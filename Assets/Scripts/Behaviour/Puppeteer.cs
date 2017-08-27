@@ -218,6 +218,6 @@ public class Puppeteer : MonoBehaviour
 
     private class FileData
     {
-        public Dictionary<int, Dictionary<string, Movement>> frames;
+        public Dictionary<int, Dictionary<string, Movement>> frames = null;
     }
 }

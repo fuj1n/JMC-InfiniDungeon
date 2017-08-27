@@ -74,4 +74,9 @@ public class Item
     }
 
     public virtual void OnItemStackConstructed(ItemStack stack) { }
+
+    public virtual bool IsEqual(ItemStack l, ItemStack r)
+    {
+        return l.item == r.item && l.data == r.data;
+    }
 }
